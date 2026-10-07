@@ -55,7 +55,7 @@ function Hero({ onPlay }: { onPlay: () => void }) {
     <section ref={ref} className="grain relative overflow-hidden bg-midnight text-pearl">
       {/* layer 1: background photo / film */}
       <motion.div style={desktop ? { y: bgY } : {}} className="absolute inset-0 h-[118%]">
-        <img src={images.hero} alt="Candlelit floral mandap at a palace wedding" width={1920} height={1088} fetchPriority="high" className="animate-slow-zoom h-full w-full object-cover object-[62%_center]" />
+        <img src={images.hero} alt="Candlelit floral mandap at a palace wedding" width={1920} height={1088} fetchPriority="high" className="animate-slow-zoom h-full w-full object-cover object-[50%_40%] md:object-[62%_center]" />
         {HERO_VIDEO && desktop && (
           <video className="absolute inset-0 h-full w-full object-cover" src={HERO_VIDEO} poster={images.hero} autoPlay muted loop playsInline preload="none" />
         )}
@@ -86,7 +86,7 @@ function Hero({ onPlay }: { onPlay: () => void }) {
         </h1>
         <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }} className="font-hindi text-xl text-champagne sm:text-3xl">यादें जो हमेशा रहें</motion.p>
         <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.65, duration: 0.8 }} className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-pearl/75">From intimate celebrations to grand occasions, we create experiences that stay in hearts forever.</motion.p>
-        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.8 }} className="mt-8 grid grid-cols-1 gap-3 min-[390px]:grid-cols-[auto_auto] min-[390px]:justify-start sm:flex">
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.8 }} className="mt-8 grid grid-cols-1 gap-3 min-[430px]:grid-cols-[auto_auto] min-[430px]:justify-start sm:flex">
           <Link to="/events" className="btn-gold shine justify-center">Explore Our Events <ArrowRight size={16} /></Link>
           <button onClick={onPlay} className="btn-ghost-light justify-center"><span className="relative grid h-7 w-7 place-items-center rounded-full bg-pearl text-midnight"><span className="absolute inset-0 animate-ping rounded-full bg-pearl/40" /><Play size={11} fill="currentColor" /></span>Our Story</button>
         </motion.div>
