@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { whatsappLink } from "@/lib/data";
+import logo from "@/assets/eventors-logo-light.png";
 
 const links = [
   { to: "/", label: "Home" },
@@ -14,15 +16,8 @@ const links = [
 
 export function Logo() {
   return (
-    <Link to="/" className="flex items-center gap-2.5 text-pearl">
-      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden>
-        <path d="M16 4c3 4 3 8 0 12-3-4-3-8 0-12Zm0 12c4-2 8-1 11 2-4 2-8 1-11-2Zm0 0c-4-2-8-1-11 2 4 2 8 1 11-2Zm0 0v12" fill="none" stroke="url(#g)" strokeWidth="1.6" strokeLinecap="round" />
-        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stopColor="#F4D58D" /><stop offset="1" stopColor="#D9A441" /></linearGradient></defs>
-      </svg>
-      <span className="leading-none">
-        <span className="block font-display text-[1.6rem]">Yaadein</span>
-        <span className="block text-[0.55rem] tracking-[0.3em] text-champagne/80 uppercase">Events & Experiences</span>
-      </span>
+    <Link to="/" aria-label="The Eventors — Home" className="block shrink-0">
+      <img src={logo} alt="The Eventors — We manage बेहतर" className="h-16 w-28 object-contain sm:h-20 sm:w-36" />
     </Link>
   );
 }
@@ -56,7 +51,7 @@ export function Nav() {
             ))}
           </nav>
           <div className="flex items-center gap-3">
-            <Link to="/contact" className="btn-gold hidden !px-5 !py-2.5 sm:inline-flex">Plan Your Event <ArrowRight size={16} /></Link>
+            <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn-gold hidden !px-5 !py-2.5 sm:inline-flex">Plan Your Event <ArrowRight size={16} /></a>
             <button aria-label="Open menu" onClick={() => setOpen(true)} className="grid h-10 w-10 place-items-center rounded-full border border-pearl/25 text-pearl lg:hidden">
               <Menu size={18} />
             </button>
@@ -78,7 +73,7 @@ export function Nav() {
                 </motion.div>
               ))}
             </nav>
-            <Link to="/contact" onClick={() => setOpen(false)} className="btn-gold relative mt-auto justify-center">Plan Your Event <ArrowRight size={16} /></Link>
+            <a href={whatsappLink()} target="_blank" rel="noreferrer" onClick={() => setOpen(false)} className="btn-gold relative mt-auto justify-center">Plan Your Event <ArrowRight size={16} /></a>
           </motion.div>
         )}
       </AnimatePresence>

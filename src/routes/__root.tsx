@@ -36,7 +36,7 @@ function StatusScreen({ code, title, text, children }: { code: string; title: st
 
 function NotFoundComponent() {
   return (
-    <StatusScreen code="404" title="This moment doesn't exist" text="The page you're looking for has moved — but beautiful yaadein are still waiting.">
+    <StatusScreen code="404" title="This moment doesn't exist" text="The page you're looking for has moved — but beautiful memories are still waiting.">
       <Link to="/" className="btn-gold">Back to home</Link>
     </StatusScreen>
   );
@@ -61,8 +61,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Yaadein — Events & Experiences" },
-      { name: "description", content: "We don't plan events. We craft yaadein. Weddings, corporate, social and birthday experiences." },
+      { title: "The Eventors — Events & Experiences" },
+      { name: "description", content: "We manage बेहतर. Weddings, corporate, social and birthday experiences." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -71,7 +71,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500&display=swap" },

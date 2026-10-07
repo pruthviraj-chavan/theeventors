@@ -14,9 +14,9 @@ export const Route = createFileRoute("/contact")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Contact Yaadein — Let's Create Your Next Yaad" },
+      { title: "Contact The Eventors — Let's Create Your Next Yaad" },
       { name: "description", content: "Enquire about your wedding, corporate, social or birthday event. Free consultation, quick response within 24 hours." },
-      { property: "og:title", content: "Contact Yaadein" },
+      { property: "og:title", content: "Contact The Eventors" },
       { property: "og:description", content: "Tell us about your event and let our experts make it unforgettable." },
     ],
   }),
@@ -54,7 +54,7 @@ function Contact() {
     setErrors({});
     setSummary("");
     const d = r.data;
-    const msg = `Hi Yaadein! Enquiry:\nName: ${d.name}\nPhone: ${d.phone}\nEmail: ${d.email}\nEvent: ${d.type}\nDate: ${d.date || "-"}\nGuests: ${d.guests || "-"}\n${d.message || ""}`;
+    const msg = `Hi The Eventors! Enquiry:\nName: ${d.name}\nPhone: ${d.phone}\nEmail: ${d.email}\nEvent: ${d.type}\nDate: ${d.date || "-"}\nGuests: ${d.guests || "-"}\n${d.message || ""}`;
     setBusy(true);
     const w = window.open("", "_blank");
     setTimeout(() => {
@@ -67,7 +67,7 @@ function Contact() {
 
   return (
     <>
-    <PageHero eyebrow="Contact Yaadein" title={<>Your next <span className="text-gold-gradient italic">celebration</span></>} sub="Every beautiful memory begins with a conversation." img={images.hero} />
+    <PageHero eyebrow="Contact The Eventors" title={<>Your next <span className="text-gold-gradient italic">celebration</span></>} sub="Every beautiful memory begins with a conversation." img={images.hero} />
     <section className="bg-night grain relative overflow-hidden pt-12 pb-24 text-pearl md:pt-16">
       <img src={images.hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
       <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 to-midnight" />
@@ -79,7 +79,7 @@ function Contact() {
           <p className="mt-5 max-w-md text-pearl/70">Tell us about your event and let our experts make it unforgettable.</p>
           <ul className="mt-8 space-y-5">
             {[
-              { I: Phone, l: "Call us", v: CONTACT.phone, h: `tel:${CONTACT.phoneRaw}` },
+              { I: Phone, l: "WhatsApp us", v: CONTACT.phone, h: whatsappLink() },
               { I: Mail, l: "Email us", v: CONTACT.email, h: `mailto:${CONTACT.email}` },
               { I: MapPin, l: "Visit us", v: CONTACT.city },
             ].map(({ I, l, v, h }) => (

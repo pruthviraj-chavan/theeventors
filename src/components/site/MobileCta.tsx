@@ -19,7 +19,7 @@ export function MobileCta() {
       {visible && (
         <motion.div initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }} transition={{ type: "spring", damping: 26, stiffness: 260 }}
           className="fixed inset-x-3 bottom-3 z-40 flex gap-2 pb-[env(safe-area-inset-bottom)] md:hidden">
-          <Link to="/contact" className="btn-gold flex-1 justify-center !py-3.5">Enquire Now <ArrowRight size={16} /></Link>
+          <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn-gold flex-1 justify-center !py-3.5">Enquire Now <ArrowRight size={16} /></a>
           <a href={whatsappLink()} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" className="glass-dark grid h-[50px] w-[50px] shrink-0 place-items-center rounded-full text-champagne"><MessageCircle size={20} /></a>
         </motion.div>
       )}

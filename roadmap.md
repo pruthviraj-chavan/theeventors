@@ -1,4 +1,4 @@
-# Yaadein roadmap
+# The Eventors roadmap
 - [x] Initial multi-page site
 - [x] Mobile UX pass (360/390/430, sticky CTA, swipe carousels, vertical timeline, no overflow)
 - [x] Loading system (logo intro, page transitions, skeletons, button/form loading, success, empty, error)
@@ -8,3 +8,5 @@
 - [x] Compress six original videos and create CDN-hosted mobile/desktop versions and posters
 - [x] Add hero video, compact non-home video headers, and distinct Home/About/Events/Gallery film layouts
 - [x] Verify playback and mobile layouts; deliver media replacement documentation
+
+- [x] Rename company, install transparent supplied logo and slogan, and verify owner WhatsApp actions

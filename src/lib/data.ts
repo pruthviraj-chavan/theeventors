@@ -11,13 +11,13 @@ import { eventFilms, heroFilm } from "./media";
 export const images = { wedding, corporate, birthday, social, sangeet, lanterns, team, hero };
 
 export const CONTACT = {
-  phone: "+91 98765 43210",
-  phoneRaw: "919876543210",
+  phone: "+91 98044 89525",
+  phoneRaw: "919804489525",
   email: "hello@yaadein.events",
   city: "Pune, Maharashtra, India",
 };
 
-export const whatsappLink = (msg = "Hi Yaadein! I'd love to plan an event with you.") =>
+export const whatsappLink = (msg = "Hi The Eventors! I'd like to enquire about an event.") =>
   `https://wa.me/${CONTACT.phoneRaw}?text=${encodeURIComponent(msg)}`;
 
 export type Category = "Wedding" | "Corporate" | "Social" | "Birthday";
@@ -43,7 +43,7 @@ export const showcase = [
 export const testimonials = [
   { quote: "They turned our dream wedding into a magical reality. Truly unforgettable!", name: "Priya & Rohit", event: "Wedding, Pune" },
   { quote: "Their planning and creativity made our corporate event a huge success.", name: "Amit Sharma", event: "Corporate Event, Mumbai" },
-  { quote: "From decoration to entertainment, everything was perfect. We created beautiful yaadein!", name: "Sneha Kulkarni", event: "Birthday Celebration, Pune" },
+  { quote: "From decoration to entertainment, everything was perfect. We created beautiful memories!", name: "Sneha Kulkarni", event: "Birthday Celebration, Pune" },
 ];
 
 export const posts = [
