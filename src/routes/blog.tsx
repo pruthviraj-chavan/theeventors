@@ -10,6 +10,8 @@ import { CardSkeleton, EmptyState, useSwitchLoading } from "@/components/site/Lo
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Blog — Ideas & Inspiration for Your Next Celebration | Yaadein" },
       { name: "description", content: "Wedding themes, event planning tips, corporate event ideas and birthday inspiration from the Yaadein team." },
       { property: "og:title", content: "Yaadein Blog" },

@@ -6,10 +6,13 @@ import { EmptyState, useSwitchLoading } from "@/components/site/Loader";
 import { images, showcase } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
+import { FilmGallery } from "@/components/site/FilmGallery";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Gallery — Moments Captured, Memories Forever | Yaadein" },
       { name: "description", content: "Browse weddings, corporate galas, social evenings and birthday celebrations crafted by Yaadein." },
       { property: "og:title", content: "Yaadein Gallery" },
@@ -36,6 +39,7 @@ function Gallery() {
           ))}
         </div>
       </PageHero>
+      <FilmGallery variant="gallery" />
       <section className="bg-ivory py-14 md:py-20">
         {loading ? (
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 px-5 sm:gap-4 sm:px-6 md:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton aspect-square rounded-2xl" />)}</div>

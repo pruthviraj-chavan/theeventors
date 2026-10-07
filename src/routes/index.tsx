@@ -2,7 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, Play, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { categories, films, HERO_VIDEO, images, showcase, testimonials } from "@/lib/data";
+import { categories, films, images, showcase, testimonials } from "@/lib/data";
+import { EventVideo } from "@/components/site/EventVideo";
+import { FilmModal, FilmTile } from "@/components/site/FilmGallery";
+import { heroFilm } from "@/lib/media";
 import { Counter, Particles, Reveal } from "@/components/site/Reveal";
 import { SectionHead } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
@@ -11,6 +14,8 @@ import { CardSkeleton, EmptyState, useIsDesktop, useSwitchLoading } from "@/comp
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Yaadein — We don't plan events. We craft yaadein." },
       { name: "description", content: "Luxury wedding, corporate, social and birthday experiences in Pune and across India. Celebrations turned into memories." },
       { property: "og:title", content: "Yaadein — Events & Experiences" },
@@ -28,16 +33,16 @@ function Home() {
   const [film, setFilm] = useState<Film | null>(null);
   return (
     <>
-      <Hero onPlay={() => setFilm(films[0]!)} />
+      <Hero onPlay={() => setFilm(films[0] ?? null)} />
       <Stats />
-      <Story onPlay={() => setFilm(films[0]!)} />
+      <Story onPlay={() => setFilm(films[0] ?? null)} />
       <Why />
       <Process />
       <Showcase />
       <Films onOpen={setFilm} />
       <Testimonials />
       <FinalCta />
-      <VideoModal film={film} onClose={() => setFilm(null)} />
+      <FilmModal film={film} onClose={() => setFilm(null)} />
     </>
   );
 }
@@ -55,14 +60,11 @@ function Hero({ onPlay }: { onPlay: () => void }) {
     <section ref={ref} className="grain relative overflow-hidden bg-midnight text-pearl">
       {/* layer 1: background photo / film */}
       <motion.div style={desktop ? { y: bgY } : {}} className="absolute inset-0 h-[118%]">
-        <img src={images.hero} alt="Candlelit floral mandap at a palace wedding" width={1920} height={1088} fetchPriority="high" className="animate-slow-zoom h-full w-full object-cover object-[50%_40%] md:object-[62%_center]" />
-        {HERO_VIDEO && desktop && (
-          <video className="absolute inset-0 h-full w-full object-cover" src={HERO_VIDEO} poster={images.hero} autoPlay muted loop playsInline preload="none" />
-        )}
+        <EventVideo film={heroFilm} priority className="absolute inset-0 h-full w-full" />
       </motion.div>
       {/* layer 2: cinematic overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/30 to-midnight md:bg-gradient-to-r md:from-midnight/95 md:via-midnight/55 md:to-midnight/10" />
-      <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-midnight via-midnight/80 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/30 to-midnight md:bg-gradient-to-r md:from-midnight/95 md:via-midnight/55 md:to-midnight/10" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-midnight via-midnight/80 to-transparent" />
       {/* layer 3: moving light leaks */}
       <div className="light-leak -top-24 -left-24 h-[420px] w-[420px] bg-magenta/35" />
       <div className="light-leak top-1/3 right-[-10%] h-[380px] w-[380px] bg-gold/35" style={{ animationDelay: "-5s" }} />
@@ -326,11 +328,11 @@ function Films({ onOpen }: { onOpen: (f: Film) => void }) {
             <p className="eyebrow text-champagne">Yaadein Films</p>
             <h2 className="mt-3 text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl">Watch the <span className="text-gold-gradient italic">moments</span></h2>
           </div>
-          <p className="max-w-sm text-sm text-pearl/60">Short films from celebrations we've crafted — tap any film to watch.</p>
+          <p className="max-w-sm text-sm text-pearl/60">A grand welcome. A shared evening. A moment that stays.</p>
         </Reveal>
         <div className="mt-10 grid gap-4 lg:grid-cols-[1.6fr_1fr] lg:gap-5">
           <Reveal><FilmCard f={feat} big onOpen={onOpen} /></Reveal>
-          <div className="swipe-row -mx-5 scroll-px-5 px-5 lg:mx-0 lg:grid lg:grid-rows-3 lg:gap-5 lg:overflow-visible lg:px-0">
+          <div className="swipe-row -mx-5 scroll-px-5 px-5 lg:mx-0 lg:grid lg:grid-rows-5 lg:gap-5 lg:overflow-visible lg:px-0">
             {rest.map((f, i) => (
               <Reveal key={f.title} delay={0.1 + i * 0.08} className="w-[72%] sm:w-[46%] lg:w-auto"><FilmCard f={f} onOpen={onOpen} /></Reveal>
             ))}
@@ -342,53 +344,7 @@ function Films({ onOpen }: { onOpen: (f: Film) => void }) {
 }
 
 function FilmCard({ f, big, onOpen }: { f: Film; big?: boolean; onOpen: (f: Film) => void }) {
-  return (
-    <button onClick={() => onOpen(f)} aria-label={`Play film: ${f.title}`} className={`group relative block w-full overflow-hidden rounded-2xl text-left ring-1 ring-pearl/10 ${big ? "aspect-[4/5] sm:aspect-video lg:h-full lg:aspect-auto lg:min-h-[480px]" : "aspect-video lg:aspect-auto lg:h-full"}`}>
-      <img src={f.thumb} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
-      <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/30 to-transparent transition-opacity group-hover:opacity-80" />
-      <span className="glass-dark eyebrow absolute top-3 left-3 rounded-full px-3 py-1.5 text-[0.58rem] text-champagne">{f.cat}</span>
-      <span className="glass-dark absolute top-3 right-3 rounded-full px-2.5 py-1 text-xs tabular-nums">{f.duration}</span>
-      <span className={`absolute grid place-items-center rounded-full text-midnight transition-transform duration-500 group-hover:scale-110 ${big ? "bg-gold top-1/2 left-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 shadow-gold" : "bg-pearl/90 bottom-3 right-3 h-11 w-11"}`}>
-        {big && <span className="absolute inset-0 animate-ping rounded-full bg-gold/40" />}
-        <Play size={big ? 24 : 15} fill="currentColor" className="ml-0.5" />
-      </span>
-      <div className={`absolute bottom-0 left-0 p-4 ${big ? "md:p-7" : "pr-16"}`}>
-        {big && <p className="eyebrow text-[0.6rem] text-champagne">Featured film</p>}
-        <h3 className={`${big ? "mt-2 text-3xl md:text-5xl" : "text-xl"} leading-tight`}>{f.title}</h3>
-      </div>
-    </button>
-  );
-}
-
-function VideoModal({ film, onClose }: { film: Film | null; onClose: () => void }) {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    if (!film) return;
-    setReady(false);
-    document.body.style.overflow = "hidden";
-    const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", k);
-    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", k); };
-  }, [film, onClose]);
-  return (
-    <AnimatePresence>
-      {film && (
-        <motion.div role="dialog" aria-modal="true" aria-label={film.title} className="fixed inset-0 z-[80] grid place-items-center bg-midnight/95 p-4 backdrop-blur-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} onClick={onClose}>
-          <button aria-label="Close video" onClick={onClose} className="absolute top-4 right-4 grid h-12 w-12 place-items-center rounded-full border border-pearl/30 text-pearl transition hover:border-champagne"><X /></button>
-          <motion.div initial={{ scale: 0.9, y: 30, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.94, y: 20, opacity: 0 }} transition={{ duration: 0.5, ease }} className="w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
-            <div className="relative aspect-video overflow-hidden rounded-2xl bg-navy shadow-soft ring-1 ring-gold/20">
-              {!ready && <div className="skeleton-dark absolute inset-0 grid place-items-center"><span className="eyebrow text-champagne/70">Loading film…</span></div>}
-              <iframe className="absolute inset-0 h-full w-full" src={`https://www.youtube-nocookie.com/embed/${film.youtubeId}?autoplay=1&rel=0`} title={film.title} onLoad={() => setReady(true)} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen />
-            </div>
-            <div className="mt-4 flex items-center justify-between text-pearl">
-              <p className="font-display text-2xl">{film.title}</p>
-              <span className="eyebrow text-champagne">{film.cat} · {film.duration}</span>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  return <FilmTile film={f} onOpen={onOpen} className={big ? "aspect-[4/5] sm:aspect-video lg:h-full lg:aspect-auto lg:min-h-[600px]" : "aspect-video lg:h-full lg:min-h-[120px] lg:aspect-auto"} />;
 }
 
 /* ---------------- TESTIMONIALS (bright, swipeable) ---------------- */

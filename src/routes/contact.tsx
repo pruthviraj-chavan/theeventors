@@ -6,11 +6,14 @@ import { CONTACT, images, whatsappLink } from "@/lib/data";
 import { Particles, Reveal } from "@/components/site/Reveal";
 import { LoadingDots, SuccessCheck } from "@/components/site/Loader";
 import { AnimatePresence, motion } from "motion/react";
+import { PageHero } from "@/components/site/PageHero";
 
 export const Route = createFileRoute("/contact")({
   validateSearch: (s: Record<string, unknown>): { type?: string } => (typeof s['type'] === "string" ? { type: s['type'] as string } : {}),
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Contact Yaadein — Let's Create Your Next Yaad" },
       { name: "description", content: "Enquire about your wedding, corporate, social or birthday event. Free consultation, quick response within 24 hours." },
       { property: "og:title", content: "Contact Yaadein" },
@@ -63,14 +66,16 @@ function Contact() {
   };
 
   return (
-    <section className="bg-night grain relative overflow-hidden pt-28 pb-24 text-pearl md:pt-36">
+    <>
+    <PageHero eyebrow="Contact Yaadein" title={<>Your next <span className="text-gold-gradient italic">celebration</span></>} sub="Every beautiful memory begins with a conversation." img={images.hero} />
+    <section className="bg-night grain relative overflow-hidden pt-12 pb-24 text-pearl md:pt-16">
       <img src={images.hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
       <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 to-midnight" />
       <Particles count={10} />
       <div className="relative mx-auto grid max-w-7xl gap-10 px-5 sm:px-6 lg:grid-cols-2 lg:gap-14">
         <Reveal>
           <p className="eyebrow text-champagne">Contact</p>
-          <h1 className="mt-4 text-[2.7rem] leading-[1.02] sm:text-6xl md:text-7xl">Let's create your <span className="text-gold-gradient italic">Next Yaad</span></h1>
+           <h2 className="mt-4 text-[2.7rem] leading-[1.02] sm:text-6xl">Let's create your <span className="text-gold-gradient italic">Next Yaad</span></h2>
           <p className="mt-5 max-w-md text-pearl/70">Tell us about your event and let our experts make it unforgettable.</p>
           <ul className="mt-8 space-y-5">
             {[
@@ -134,5 +139,6 @@ function Contact() {
         </Reveal>
       </div>
     </section>
+    </>
   );
 }

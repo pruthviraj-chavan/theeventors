@@ -4,10 +4,14 @@ import { categories, images } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { FinalCta } from "@/components/site/FinalCta";
+import { FilmGallery } from "@/components/site/FilmGallery";
+import { videoLibrary } from "@/lib/media";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Our Events — Weddings, Corporate, Social & Birthdays | Yaadein" },
       { name: "description", content: "Explore Yaadein's wedding, corporate, social and birthday experiences — different occasions, same emotion." },
       { property: "og:title", content: "Our Events | Yaadein" },
@@ -51,6 +55,7 @@ function Events() {
           ))}
         </div>
       </section>
+      <FilmGallery variant="events" films={[videoLibrary.entrance, videoLibrary.courtyard, videoLibrary.dandiya, videoLibrary.estate]} />
       <FinalCta />
     </>
   );

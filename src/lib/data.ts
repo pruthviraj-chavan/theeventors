@@ -6,6 +6,7 @@ import sangeet from "@/assets/sangeet.jpg";
 import lanterns from "@/assets/lanterns.jpg";
 import team from "@/assets/team.jpg";
 import hero from "@/assets/hero.jpg";
+import { eventFilms, heroFilm } from "./media";
 
 export const images = { wedding, corporate, birthday, social, sangeet, lanterns, team, hero };
 
@@ -54,13 +55,5 @@ export const posts = [
   { title: "Lighting That Tells a Story", cat: "Trends", date: "Jul 30, 2026", read: "6 min", img: lanterns, excerpt: "Candles, lanterns and chandeliers — why light is the most emotional element of any event." },
 ];
 
-/** Set to an mp4 URL to play a background film in the homepage hero (desktop only). */
-export const HERO_VIDEO = "";
-
-/** Replace youtubeId values with your own films. Thumbnails use our photography until then. */
-export const films = [
-  { title: "The Palace Pheras — Udaipur", cat: "Wedding Film", duration: "4:32", youtubeId: "ScMzIvxBSi4", thumb: hero },
-  { title: "Rang Sangeet Night", cat: "Sangeet", duration: "2:48", youtubeId: "ScMzIvxBSi4", thumb: sangeet },
-  { title: "Global Leaders Summit", cat: "Corporate", duration: "1:56", youtubeId: "ScMzIvxBSi4", thumb: corporate },
-  { title: "Lantern Lake Vows", cat: "Destination", duration: "3:10", youtubeId: "ScMzIvxBSi4", thumb: lanterns },
-];
+export const HERO_VIDEO = heroFilm.src;
+export const films = eventFilms;
