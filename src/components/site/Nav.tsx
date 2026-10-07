@@ -20,7 +20,7 @@ export function Logo() {
         <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stopColor="#F4D58D" /><stop offset="1" stopColor="#D9A441" /></linearGradient></defs>
       </svg>
       <span className="leading-none">
-        <span className="block font-display text-2xl">Yaadein</span>
+        <span className="block font-display text-[1.6rem]">Yaadein</span>
         <span className="block text-[0.55rem] tracking-[0.3em] text-champagne/80 uppercase">Events & Experiences</span>
       </span>
     </Link>
@@ -36,11 +36,17 @@ export function Nav() {
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    const k = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, [open]);
 
   return (
     <>
       <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "py-2" : "py-5"}`}>
-        <div className={`mx-auto flex max-w-7xl items-center justify-between rounded-full px-5 transition-all duration-500 ${scrolled ? "glass-dark mx-3 py-2 shadow-soft md:mx-auto" : "py-2"}`}>
+        <div className={`mx-auto flex max-w-7xl items-center justify-between rounded-full px-4 sm:px-5 transition-all duration-500 ${scrolled ? "glass-dark mx-3 py-2 shadow-soft md:mx-auto" : "py-2"}`}>
           <Logo />
           <nav className="hidden items-center gap-8 lg:flex">
             {links.map((l) => (
@@ -64,14 +70,15 @@ export function Nav() {
               <Logo />
               <button aria-label="Close menu" onClick={() => setOpen(false)} className="grid h-10 w-10 place-items-center rounded-full border border-pearl/25 text-pearl"><X size={18} /></button>
             </div>
-            <nav className="mt-16 flex flex-col gap-4">
+            <div className="light-leak -right-20 top-1/3 h-72 w-72 bg-magenta/30" />
+            <nav aria-label="Mobile" className="relative mt-14 flex flex-col">
               {links.map((l, i) => (
                 <motion.div key={l.to} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.06 }}>
-                  <Link to={l.to} onClick={() => setOpen(false)} className="font-display text-5xl text-pearl hover:text-champagne">{l.label}</Link>
+                  <Link to={l.to} onClick={() => setOpen(false)} activeOptions={{ exact: l.to === "/" }} activeProps={{ className: "!text-champagne" }} className="flex items-baseline gap-4 border-b border-pearl/10 py-3.5 font-display text-[2.6rem] leading-none text-pearl"><span className="font-sans text-xs text-champagne/60">0{i + 1}</span>{l.label}</Link>
                 </motion.div>
               ))}
             </nav>
-            <Link to="/contact" onClick={() => setOpen(false)} className="btn-gold mt-auto self-start">Plan Your Event <ArrowRight size={16} /></Link>
+            <Link to="/contact" onClick={() => setOpen(false)} className="btn-gold relative mt-auto justify-center">Plan Your Event <ArrowRight size={16} /></Link>
           </motion.div>
         )}
       </AnimatePresence>

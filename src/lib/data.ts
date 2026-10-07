@@ -53,3 +53,14 @@ export const posts = [
   { title: "The Magic of a Sangeet Night", cat: "Wedding Tips", date: "Aug 12, 2026", read: "4 min", img: sangeet, excerpt: "Choreography, colour and music — how to plan the most joyful night of the wedding week." },
   { title: "Lighting That Tells a Story", cat: "Trends", date: "Jul 30, 2026", read: "6 min", img: lanterns, excerpt: "Candles, lanterns and chandeliers — why light is the most emotional element of any event." },
 ];
+
+/** Set to an mp4 URL to play a background film in the homepage hero (desktop only). */
+export const HERO_VIDEO = "";
+
+/** Replace youtubeId values with your own films. Thumbnails use our photography until then. */
+export const films = [
+  { title: "The Palace Pheras — Udaipur", cat: "Wedding Film", duration: "4:32", youtubeId: "ScMzIvxBSi4", thumb: hero },
+  { title: "Rang Sangeet Night", cat: "Sangeet", duration: "2:48", youtubeId: "ScMzIvxBSi4", thumb: sangeet },
+  { title: "Global Leaders Summit", cat: "Corporate", duration: "1:56", youtubeId: "ScMzIvxBSi4", thumb: corporate },
+  { title: "Lantern Lake Vows", cat: "Destination", duration: "3:10", youtubeId: "ScMzIvxBSi4", thumb: lanterns },
+];
