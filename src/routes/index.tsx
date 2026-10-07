@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
-import { useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Play, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote } from "lucide-react";
-import { categories, images, showcase, testimonials } from "@/lib/data";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, ArrowUpRight, Play, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { categories, films, HERO_VIDEO, images, showcase, testimonials } from "@/lib/data";
 import { Counter, Particles, Reveal } from "@/components/site/Reveal";
 import { SectionHead } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
+import { CardSkeleton, EmptyState, useIsDesktop, useSwitchLoading } from "@/components/site/Loader";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,78 +21,99 @@ export const Route = createFileRoute("/")({
 });
 
 const catIcons = { Wedding: Heart, Corporate: Briefcase, Social: PartyPopper, Birthday: Cake };
+const ease = [0.2, 0.7, 0.2, 1] as const;
+type Film = (typeof films)[number];
 
 function Home() {
-  const [video, setVideo] = useState(false);
+  const [film, setFilm] = useState<Film | null>(null);
   return (
     <>
-      <Hero onPlay={() => setVideo(true)} />
+      <Hero onPlay={() => setFilm(films[0]!)} />
       <Stats />
+      <Story onPlay={() => setFilm(films[0]!)} />
       <Why />
-      <Story onPlay={() => setVideo(true)} />
       <Process />
       <Showcase />
+      <Films onOpen={setFilm} />
       <Testimonials />
       <FinalCta />
-      <AnimatePresence>
-        {video && (
-          <motion.div className="fixed inset-0 z-[70] grid place-items-center bg-midnight/90 p-6 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setVideo(false)}>
-            <button aria-label="Close video" className="absolute top-6 right-6 grid h-11 w-11 place-items-center rounded-full border border-pearl/30 text-pearl"><X /></button>
-            <motion.div initial={{ scale: 0.92 }} animate={{ scale: 1 }} className="aspect-video w-full max-w-5xl overflow-hidden rounded-2xl shadow-soft" onClick={(e) => e.stopPropagation()}>
-              <iframe className="h-full w-full" src="https://www.youtube.com/embed/ScMzIvxBSi4?autoplay=1" title="Our story" allow="autoplay; encrypted-media" allowFullScreen />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <VideoModal film={film} onClose={() => setFilm(null)} />
     </>
   );
 }
 
+/* ---------------- HERO ---------------- */
 function Hero({ onPlay }: { onPlay: () => void }) {
   const ref = useRef(null);
+  const desktop = useIsDesktop();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
-  const line = { hidden: { opacity: 0, y: 40 }, show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 1, delay: 0.2 + i * 0.15, ease: [0.2, 0.7, 0.2, 1] as const } }) };
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
+  const fgY = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
+  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const words = ["We", "don't", "plan", "events."];
   return (
     <section ref={ref} className="grain relative overflow-hidden bg-midnight text-pearl">
-      <motion.img style={{ y }} src={images.hero} alt="Candlelit floral mandap at a palace wedding" width={1920} height={1088} fetchPriority="high" className="animate-slow-zoom absolute inset-0 h-[115%] w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-r from-midnight/95 via-midnight/60 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-midnight to-transparent" />
-      <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-magenta/20 blur-[120px]" />
-      <Particles />
-      <div className="relative mx-auto max-w-7xl px-6 pt-40 pb-16 md:pt-48">
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="eyebrow text-champagne">Wedding · Corporate · Social · Birthday</motion.p>
-        <h1 className="mt-6 text-5xl leading-[0.95] sm:text-7xl md:text-8xl">
-          <motion.span custom={0} variants={line} initial="hidden" animate="show" className="block">We don't plan events.</motion.span>
-          <motion.span custom={1} variants={line} initial="hidden" animate="show" className="block">
-            We craft <span className="text-gold-gradient pr-2 text-[1.35em] italic">yaadein</span>
-          </motion.span>
-        </h1>
-        <motion.p custom={2} variants={line} initial="hidden" animate="show" className="font-hindi mt-3 text-2xl text-champagne md:text-3xl">यादें जो हमेशा रहें</motion.p>
-        <motion.p custom={3} variants={line} initial="hidden" animate="show" className="mt-6 max-w-md text-pearl/75">From intimate celebrations to grand occasions, we create experiences that stay in hearts forever.</motion.p>
-        <motion.div custom={4} variants={line} initial="hidden" animate="show" className="mt-9 flex flex-wrap gap-4">
-          <Link to="/events" className="btn-gold">Explore Our Events <ArrowRight size={16} /></Link>
-          <button onClick={onPlay} className="btn-ghost-light"><span className="grid h-7 w-7 place-items-center rounded-full bg-pearl text-midnight"><Play size={12} fill="currentColor" /></span>Watch Our Story</button>
-        </motion.div>
+      {/* layer 1: background photo / film */}
+      <motion.div style={desktop ? { y: bgY } : undefined} className="absolute inset-0 h-[118%]">
+        <img src={images.hero} alt="Candlelit floral mandap at a palace wedding" width={1920} height={1088} fetchPriority="high" className="animate-slow-zoom h-full w-full object-cover object-[62%_center]" />
+        {HERO_VIDEO && desktop && (
+          <video className="absolute inset-0 h-full w-full object-cover" src={HERO_VIDEO} poster={images.hero} autoPlay muted loop playsInline preload="none" />
+        )}
+      </motion.div>
+      {/* layer 2: cinematic overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/30 to-midnight md:bg-gradient-to-r md:from-midnight/95 md:via-midnight/55 md:to-midnight/10" />
+      <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-midnight via-midnight/80 to-transparent" />
+      {/* layer 3: moving light leaks */}
+      <div className="light-leak -top-24 -left-24 h-[420px] w-[420px] bg-magenta/35" />
+      <div className="light-leak top-1/3 right-[-10%] h-[380px] w-[380px] bg-gold/35" style={{ animationDelay: "-5s" }} />
+      <div className="light-leak bottom-10 left-1/3 hidden h-[300px] w-[300px] bg-lavender/25 md:block" style={{ animationDelay: "-9s" }} />
+      <Particles count={desktop ? 22 : 10} />
 
-        <div className="mt-20 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <motion.div style={desktop ? { y: fgY, opacity: fade } : undefined} className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pt-28 pb-10 sm:px-6 md:min-h-0 md:justify-start md:pt-44 md:pb-16">
+        <motion.p initial={{ opacity: 0, letterSpacing: "0.6em" }} animate={{ opacity: 1, letterSpacing: "0.32em" }} transition={{ duration: 1.4, delay: 0.3 }} className="eyebrow text-[0.62rem] text-champagne sm:text-[0.7rem]">Wedding · Corporate · Social · Birthday</motion.p>
+        <h1 className="mt-5 text-[2.65rem] leading-[0.98] min-[390px]:text-[2.9rem] min-[430px]:text-[3.2rem] sm:text-7xl md:text-8xl">
+          <span className="block">
+            {words.map((w, i) => (
+              <span key={w} className="inline-block overflow-hidden pr-[0.22em] align-bottom">
+                <motion.span className="inline-block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.5 + i * 0.08, ease }}>{w}</motion.span>
+              </span>
+            ))}
+          </span>
+          <span className="block overflow-hidden pb-[0.12em]">
+            <motion.span className="inline-block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.9, ease }}>We craft</motion.span>{" "}
+            <motion.span className="text-gold-gradient inline-block pr-2 text-[1.42em] italic" initial={{ opacity: 0, filter: "blur(14px)", scale: 1.08 }} animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }} transition={{ duration: 1.4, delay: 1.1, ease }}>yaadein</motion.span>
+          </span>
+        </h1>
+        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }} className="font-hindi text-xl text-champagne sm:text-3xl">यादें जो हमेशा रहें</motion.p>
+        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.65, duration: 0.8 }} className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-pearl/75">From intimate celebrations to grand occasions, we create experiences that stay in hearts forever.</motion.p>
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.8 }} className="mt-8 grid grid-cols-1 gap-3 min-[390px]:grid-cols-[auto_auto] min-[390px]:justify-start sm:flex">
+          <Link to="/events" className="btn-gold shine justify-center">Explore Our Events <ArrowRight size={16} /></Link>
+          <button onClick={onPlay} className="btn-ghost-light justify-center"><span className="relative grid h-7 w-7 place-items-center rounded-full bg-pearl text-midnight"><span className="absolute inset-0 animate-ping rounded-full bg-pearl/40" /><Play size={11} fill="currentColor" /></span>Our Story</button>
+        </motion.div>
+      </motion.div>
+
+      {/* floating category cards — swipe on mobile, grid on desktop */}
+      <div className="relative mx-auto max-w-7xl pb-14 md:px-6 md:pb-20">
+        <div className="swipe-row scroll-px-5 px-5 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0">
           {categories.map((c, i) => {
             const I = catIcons[c.name];
             return (
-              <motion.div key={c.name} initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.9 + i * 0.1, ease: [0.2, 0.7, 0.2, 1] }}>
-                <Link to="/events" hash={c.name.toLowerCase()} className="group glass-light block overflow-hidden rounded-2xl p-2 text-foreground shadow-soft transition-transform duration-500 hover:-translate-y-2">
-                  <div className="relative overflow-hidden rounded-xl">
-                    <img src={c.img} alt={`${c.name} event`} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <span className="bg-gold absolute -bottom-4 left-3 grid h-10 w-10 place-items-center rounded-xl text-midnight shadow-gold"><I size={18} /></span>
-                  </div>
-                  <div className="flex items-end justify-between gap-2 px-2 pt-6 pb-2">
-                    <div>
-                      <h3 className="text-2xl">{c.name}</h3>
-                      <p className="mt-1 text-xs text-muted-foreground">{c.desc}</p>
+              <motion.div key={c.name} className="w-[68%] min-[430px]:w-[60%] md:w-auto" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 2 + i * 0.1, ease }}>
+                <div className={desktop ? "animate-float" : ""} style={{ animationDelay: `${i * -1.5}s` }}>
+                  <Link to="/events" hash={c.name.toLowerCase()} className="group glass-light block overflow-hidden rounded-2xl p-2 text-foreground shadow-soft transition-transform duration-500 md:hover:-translate-y-2">
+                    <div className="relative overflow-hidden rounded-xl">
+                      <img src={c.img} alt={`${c.name} event`} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <span className="bg-gold absolute -bottom-4 left-3 grid h-10 w-10 place-items-center rounded-xl text-midnight shadow-gold"><I size={18} /></span>
                     </div>
-                    <ArrowUpRight size={18} className="shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-                  </div>
-                </Link>
+                    <div className="flex items-end justify-between gap-2 px-2 pt-6 pb-2">
+                      <div className="min-w-0">
+                        <h3 className="text-2xl">{c.name}</h3>
+                        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.desc}</p>
+                      </div>
+                      <ArrowUpRight size={18} className="shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </div>
               </motion.div>
             );
           })}
@@ -101,53 +123,92 @@ function Hero({ onPlay }: { onPlay: () => void }) {
   );
 }
 
+/* ---------------- STATS (dark → light bridge) ---------------- */
 function Stats() {
   const s = [
     { n: 500, suf: "+", l: "Happy Clients" },
     { n: 1000, suf: "+", l: "Events Organised" },
-    { n: 4.9, suf: "/5", l: "Client Satisfaction", d: 1 },
-    { n: 10, suf: "+", l: "Years Experience" },
+    { n: 4.9, suf: "/5", l: "Client Rating", d: 1 },
+    { n: 10, suf: "+", l: "Years of Craft" },
   ];
   return (
-    <section className="relative bg-ivory">
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid grid-cols-2 divide-border md:grid-cols-4 md:divide-x">
+    <section className="relative bg-[linear-gradient(180deg,var(--midnight)_50%,var(--ivory)_50%)] px-5 sm:px-6">
+      <Reveal className="mx-auto max-w-6xl">
+        <div className="grid grid-cols-2 gap-y-6 rounded-3xl border border-gold/20 bg-pearl px-4 py-8 shadow-soft md:grid-cols-4 md:divide-x md:divide-border md:px-6 md:py-12">
           {s.map((x) => (
-            <Reveal key={x.l} className="py-4 text-center">
-              <div className="font-display text-5xl text-gold-gradient md:text-6xl"><Counter to={x.n} suffix={x.suf} decimals={x.d ?? 0} /></div>
-              <p className="eyebrow mt-2 text-muted-foreground">{x.l}</p>
-            </Reveal>
+            <div key={x.l} className="text-center">
+              <div className="text-gold-gradient font-display text-[2.6rem] leading-none md:text-6xl"><Counter to={x.n} suffix={x.suf} decimals={x.d ?? 0} /></div>
+              <p className="eyebrow mt-2 text-[0.6rem] text-muted-foreground md:text-[0.68rem]">{x.l}</p>
+            </div>
           ))}
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+/* ---------------- STORY (bright editorial) ---------------- */
+function Story({ onPlay }: { onPlay: () => void }) {
+  const desktop = useIsDesktop();
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const a = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const b = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+  return (
+    <section ref={ref} className="overflow-hidden bg-ivory py-20 md:py-32">
+      <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-6 lg:grid-cols-[1fr_1.05fr]">
+        <Reveal>
+          <p className="eyebrow text-gold">Our Story</p>
+          <h2 className="mt-4 text-[2.6rem] leading-[1.02] sm:text-6xl md:text-7xl">Every celebration has a <span className="text-gold-gradient italic">story.</span></h2>
+          <p className="mt-6 max-w-md text-muted-foreground">From the first idea to the final moment, we turn celebrations into memories — with craft, care and an obsession for detail.</p>
+          <Link to="/about" className="btn-ghost-dark mt-8">Know Our Story <ArrowRight size={16} /></Link>
+        </Reveal>
+        <div className="relative h-[400px] sm:h-[520px]">
+          <motion.div style={desktop ? { y: a } : undefined} className="absolute top-4 left-0 w-[50%] -rotate-6">
+            <img src={images.wedding} alt="" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border-4 border-pearl object-cover shadow-soft" />
+          </motion.div>
+          <motion.div style={desktop ? { y: b } : undefined} className="absolute top-0 right-0 w-[46%] rotate-[5deg]">
+            <img src={images.corporate} alt="" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border-4 border-pearl object-cover shadow-soft" />
+          </motion.div>
+          <div className="absolute bottom-0 left-[20%] z-10 w-[58%] rotate-1">
+            <img src={images.social} alt="" loading="lazy" className="aspect-[5/4] w-full rounded-2xl border-4 border-pearl object-cover shadow-soft" />
+          </div>
+          <button onClick={onPlay} aria-label="Play our story film" className="bg-gold absolute top-[46%] left-1/2 z-20 grid h-18 w-18 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-midnight shadow-gold transition-transform hover:scale-110 md:h-20 md:w-20">
+            <span className="absolute inset-0 animate-ping rounded-full bg-gold/40" />
+            <Play fill="currentColor" />
+          </button>
         </div>
       </div>
     </section>
   );
 }
 
+/* ---------------- WHY (soft editorial → fades into night) ---------------- */
 function Why() {
   const cards = [
     { I: Sparkles, t: "Creative Concepts", d: "Unique themes tailored to your story." },
-    { I: ClipboardCheck, t: "End-to-End Management", d: "From planning to execution, we handle it all." },
-    { I: Users, t: "Experienced Team", d: "A passionate team that understands your vision." },
-    { I: Gem, t: "Memorable Experiences", d: "Because we create yaadein, not just events." },
+    { I: ClipboardCheck, t: "End-to-End Care", d: "From first sketch to last guest, handled." },
+    { I: Users, t: "Experienced Team", d: "Planners who understand your vision." },
+    { I: Gem, t: "Memorable Moments", d: "We create yaadein, not just events." },
   ];
   return (
-    <section className="relative overflow-hidden bg-ivory py-24">
+    <section className="relative overflow-hidden bg-[linear-gradient(180deg,var(--ivory)_0%,var(--ivory)_70%,var(--midnight)_100%)] pt-8 pb-32 md:pb-44">
       <div className="absolute top-10 -right-32 h-96 w-96 rounded-full bg-lavender/25 blur-[100px]" />
-      <div className="absolute bottom-0 -left-32 h-80 w-80 rounded-full bg-peach/40 blur-[100px]" />
-      <div className="relative mx-auto max-w-7xl px-6">
-        <div className="grid gap-10 md:grid-cols-2 md:items-end">
-          <Reveal><SectionHead eyebrow="Why Yaadein" title={<>More than an <span className="text-accent-gradient italic">Event Planner</span></>} /></Reveal>
+      <div className="absolute top-40 -left-32 h-80 w-80 rounded-full bg-peach/40 blur-[100px]" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
+        <div className="grid gap-6 md:grid-cols-2 md:items-end md:gap-10">
+          <Reveal><SectionHead eyebrow="Why Yaadein" title={<>More than an <span className="text-accent-gradient italic">event planner</span></>} /></Reveal>
           <Reveal delay={0.1}><p className="max-w-md text-muted-foreground">We believe every celebration has a story. Our job is to listen, understand and transform your vision into an unforgettable experience.</p></Reveal>
         </div>
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {cards.map(({ I, t, d }, i) => (
             <Reveal key={t} delay={i * 0.08}>
-              <div className="group glass-light relative h-full overflow-hidden rounded-2xl p-7 shadow-soft transition-all duration-500 hover:-translate-y-2">
-                <div className="absolute -top-16 -right-16 h-40 w-40 rounded-full bg-gold/0 blur-3xl transition-colors duration-500 group-hover:bg-gold/30" />
-                <span className="relative grid h-12 w-12 place-items-center rounded-full border border-gold/40 text-gold transition-transform duration-500 group-hover:rotate-12"><I size={20} /></span>
-                <h3 className="relative mt-6 text-2xl">{t}</h3>
-                <p className="relative mt-2 text-sm text-muted-foreground">{d}</p>
+              <div className="group relative h-full overflow-hidden rounded-2xl border border-gold/15 bg-pearl/80 p-5 shadow-soft transition-all duration-500 md:p-7 md:hover:-translate-y-2">
+                <div className="absolute -top-16 -right-16 h-40 w-40 rounded-full bg-gold/10 blur-3xl transition-colors duration-500 group-hover:bg-gold/35" />
+                <span className="font-display absolute top-4 right-5 text-3xl text-gold/25 italic">0{i + 1}</span>
+                <span className="relative grid h-11 w-11 place-items-center rounded-full border border-gold/40 text-gold transition-transform duration-500 group-hover:rotate-12"><I size={19} /></span>
+                <h3 className="relative mt-5 text-xl leading-tight md:text-2xl">{t}</h3>
+                <p className="relative mt-2 text-xs text-muted-foreground md:text-sm">{d}</p>
               </div>
             </Reveal>
           ))}
@@ -157,41 +218,11 @@ function Why() {
   );
 }
 
-function Story({ onPlay }: { onPlay: () => void }) {
-  return (
-    <section className="bg-ivory pb-28">
-      <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
-        <Reveal>
-          <p className="eyebrow text-gold">Our Story</p>
-          <h2 className="mt-4 text-5xl leading-[1.02] md:text-7xl">Every celebration has a <span className="text-gold-gradient italic">story.</span></h2>
-          <p className="mt-6 max-w-md text-muted-foreground">From the first idea to the final moment, we turn celebrations into memories — with craft, care and an obsession for detail.</p>
-          <Link to="/about" className="btn-ghost-dark mt-8">Know Our Story <ArrowRight size={16} /></Link>
-        </Reveal>
-        <div className="relative h-[520px] [perspective:1200px]">
-          {[
-            { img: images.wedding, c: "left-0 top-6 w-[48%] -rotate-6" },
-            { img: images.corporate, c: "right-4 top-0 w-[46%] rotate-[5deg]" },
-            { img: images.social, c: "left-[22%] bottom-0 w-[56%] rotate-1 z-10" },
-          ].map((p, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 60, rotateX: 15 }} whileInView={{ opacity: 1, y: 0, rotateX: 0 }} viewport={{ once: true }} transition={{ duration: 1, delay: i * 0.15 }} className={`absolute ${p.c}`}>
-              <img src={p.img} alt="" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border-4 border-pearl object-cover shadow-soft" />
-            </motion.div>
-          ))}
-          <button onClick={onPlay} aria-label="Play our story" className="bg-gold absolute top-1/2 left-1/2 z-20 grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-midnight shadow-gold transition-transform hover:scale-110">
-            <span className="absolute inset-0 animate-ping rounded-full bg-gold/40" />
-            <Play fill="currentColor" />
-          </button>
-          <p className="animate-float absolute -bottom-6 -left-2 z-20 max-w-[12rem] font-display text-xl text-magenta italic">"Because every celebration deserves to be extra special"</p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
+/* ---------------- PROCESS (dark cinematic) ---------------- */
 function Process() {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "center 50%"] });
-  const w = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 75%", "end 60%"] });
+  const p = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const steps = [
     ["Consultation", "We understand your vision"],
     ["Planning", "Ideas, themes and budgeting"],
@@ -200,89 +231,197 @@ function Process() {
     ["The Perfect Yaad", "A celebration you'll always cherish"],
   ];
   return (
-    <section ref={ref} className="bg-night grain relative overflow-hidden py-28 text-pearl">
-      <img src={images.lanterns} alt="" loading="lazy" className="absolute inset-y-0 right-0 hidden h-full w-1/2 object-cover opacity-30 lg:block" />
-      <div className="absolute inset-0 bg-gradient-to-r from-midnight via-midnight/90 to-transparent" />
-      <div className="relative mx-auto max-w-7xl px-6">
+    <section ref={ref} className="grain relative -mt-px overflow-hidden bg-midnight pt-8 pb-24 text-pearl md:pb-32">
+      <img src={images.lanterns} alt="" loading="lazy" className="absolute inset-y-0 right-0 hidden h-full w-1/2 object-cover opacity-35 lg:block" />
+      <div className="absolute inset-0 bg-gradient-to-r from-midnight via-midnight/90 to-midnight/30" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-midnight to-transparent" />
+      <div className="light-leak top-1/2 -left-20 h-72 w-72 bg-magenta/20" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
         <Reveal>
           <p className="eyebrow text-champagne">Our Process</p>
-          <h2 className="mt-3 text-4xl md:text-6xl">From your idea to a beautiful <span className="text-gold-gradient italic">Yaad</span></h2>
+          <h2 className="mt-3 text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl">From your idea to a beautiful <span className="text-gold-gradient italic">Yaad</span></h2>
         </Reveal>
-        <div className="relative mt-20">
+        <div className="relative mt-14 md:mt-20">
+          {/* desktop horizontal line */}
           <div className="absolute top-6 right-0 left-0 hidden h-px bg-pearl/15 md:block" />
-          <motion.div style={{ width: w }} className="bg-gold absolute top-6 left-0 hidden h-px md:block" />
-          <div className="grid gap-10 md:grid-cols-5">
+          <motion.div style={{ width: p }} className="bg-gold absolute top-6 left-0 hidden h-px md:block" />
+          {/* mobile vertical line */}
+          <div className="absolute top-0 bottom-0 left-6 w-px bg-pearl/15 md:hidden" />
+          <motion.div style={{ height: p }} className="bg-gold absolute top-0 left-6 w-px md:hidden" />
+          <ol className="grid gap-9 md:grid-cols-5 md:gap-8">
             {steps.map(([t, d], i) => (
-              <Reveal key={t} delay={i * 0.12}>
-                <span className="relative grid h-12 w-12 place-items-center rounded-full border border-gold bg-midnight font-display text-lg text-champagne shadow-gold">0{i + 1}</span>
-                <h3 className="mt-6 text-2xl">{t}</h3>
-                <p className="mt-1 text-sm text-pearl/60">{d}</p>
+              <Reveal key={t} delay={i * 0.1}>
+                <li className="flex gap-5 md:block">
+                  <span className="relative grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold bg-midnight font-display text-lg text-champagne shadow-gold">0{i + 1}</span>
+                  <div className="pt-1 md:pt-0">
+                    <h3 className="text-2xl md:mt-6">{t}</h3>
+                    <p className="mt-1 text-sm text-pearl/60">{d}</p>
+                  </div>
+                </li>
               </Reveal>
             ))}
-          </div>
+          </ol>
         </div>
-        <Reveal className="mt-16"><Link to="/contact" className="btn-gold">Let's Plan Your Event <ArrowRight size={16} /></Link></Reveal>
+        <Reveal className="mt-14"><Link to="/contact" className="btn-gold shine">Let's Plan Your Event <ArrowRight size={16} /></Link></Reveal>
       </div>
     </section>
   );
 }
 
+/* ---------------- EVENTS SHOWCASE (bright, swipeable) ---------------- */
 function Showcase() {
   const tabs = ["All", "Wedding", "Corporate", "Social", "Birthday"];
   const [tab, setTab] = useState("All");
+  const loading = useSwitchLoading(tab);
+  const row = useRef<HTMLDivElement>(null);
   const items = showcase.filter((s) => tab === "All" || s.cat === tab);
+  const scroll = (dir: number) => row.current?.scrollBy({ left: dir * (row.current.clientWidth * 0.8), behavior: "smooth" });
   return (
-    <section className="overflow-hidden bg-ivory py-28">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="overflow-hidden bg-[linear-gradient(180deg,var(--midnight),var(--ivory)_22%)] pt-24 pb-24 md:pt-36">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <Reveal><SectionHead eyebrow="Showcase" title={<>Moments we've turned into <span className="text-accent-gradient italic">Yaadein</span></>} /></Reveal>
-          <div className="flex flex-wrap gap-2">
-            {tabs.map((t) => (
-              <button key={t} onClick={() => setTab(t)} className={`rounded-full px-4 py-2 text-sm transition-all ${tab === t ? "bg-gold text-midnight shadow-gold" : "border border-border hover:border-gold"}`}>{t}</button>
-            ))}
+          <Reveal><SectionHead eyebrow="Showcase" title={<>Moments we've turned into <span className="text-accent-gradient italic">yaadein</span></>} /></Reveal>
+          <div className="hidden gap-2 md:flex">
+            <button onClick={() => scroll(-1)} aria-label="Previous" className="grid h-12 w-12 place-items-center rounded-full border border-border bg-pearl transition hover:border-gold"><ChevronLeft size={18} /></button>
+            <button onClick={() => scroll(1)} aria-label="Next" className="grid h-12 w-12 place-items-center rounded-full border border-border bg-pearl transition hover:border-gold"><ChevronRight size={18} /></button>
           </div>
         </div>
-      </div>
-      <div className="mt-12 flex snap-x gap-5 overflow-x-auto px-6 pb-4 [scrollbar-width:none] md:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]">
-        <AnimatePresence mode="popLayout">
-          {items.map((s) => (
-            <motion.article layout key={s.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.4 }} className="group relative w-[78vw] shrink-0 snap-start overflow-hidden rounded-2xl sm:w-[380px]">
-              <img src={s.img} alt={s.title} loading="lazy" className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/20 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-6 text-pearl">
-                <span className="eyebrow text-champagne">{s.cat}</span>
-                <h3 className="mt-2 text-3xl">{s.title}</h3>
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-pearl/70"><MapPin size={12} />{s.loc} · {s.date}</p>
-              </div>
-            </motion.article>
+        <div role="tablist" aria-label="Filter events" className="no-scrollbar -mx-5 mt-8 flex gap-2 overflow-x-auto px-5">
+          {tabs.map((t) => (
+            <button role="tab" aria-selected={tab === t} key={t} onClick={() => setTab(t)} className={`min-h-11 shrink-0 rounded-full px-5 text-sm transition-all ${tab === t ? "bg-gold text-midnight shadow-gold" : "border border-border bg-pearl/60 hover:border-gold"}`}>{t}</button>
           ))}
-        </AnimatePresence>
+        </div>
       </div>
-      <div className="mt-10 text-center"><Link to="/gallery" className="btn-gold">View Full Gallery <ArrowRight size={16} /></Link></div>
+      <div ref={row} className="swipe-row mt-8 scroll-px-5 px-5 pb-2 md:scroll-px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] md:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]">
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => <div key={i} className="w-[80%] sm:w-[360px]"><CardSkeleton /></div>)
+          : items.map((s, i) => (
+              <motion.article key={s.title} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: i * 0.05 }} className="group relative w-[80%] overflow-hidden rounded-2xl sm:w-[360px]">
+                <img src={s.img} alt={s.title} loading="lazy" className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/15 to-transparent" />
+                <span className="glass-dark eyebrow absolute top-4 left-4 rounded-full px-3 py-1.5 text-[0.6rem] text-champagne">{s.cat}</span>
+                <div className="absolute inset-x-0 bottom-0 p-5 text-pearl md:p-6">
+                  <h3 className="text-[1.75rem] leading-tight md:text-3xl">{s.title}</h3>
+                  <p className="mt-2 flex items-center gap-1.5 text-xs text-pearl/70"><MapPin size={12} />{s.loc} · {s.date}</p>
+                </div>
+              </motion.article>
+            ))}
+        {!loading && items.length === 0 && <EmptyState title="Coming soon" text="New stories in this category are on their way." />}
+      </div>
+      <div className="mt-10 px-5 text-center"><Link to="/gallery" className="btn-ghost-dark">View Full Gallery <ArrowRight size={16} /></Link></div>
     </section>
   );
 }
 
-function Testimonials() {
+/* ---------------- FILM GALLERY (dark, Netflix-like) ---------------- */
+function Films({ onOpen }: { onOpen: (f: Film) => void }) {
+  const [feat, ...rest] = films;
+  if (!feat) return null;
   return (
-    <section className="relative overflow-hidden bg-ivory pb-28">
-      <div className="absolute top-0 left-1/2 h-72 w-[60%] -translate-x-1/2 rounded-full bg-lavender/20 blur-[100px]" />
-      <div className="relative mx-auto max-w-7xl px-6">
-        <Reveal><SectionHead eyebrow="Client Stories" title={<>People who found their <span className="text-gold-gradient italic">Yaadein</span> with us</>} /></Reveal>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+    <section className="grain relative overflow-hidden bg-[linear-gradient(180deg,var(--ivory),var(--midnight)_14%,var(--navy))] pt-28 pb-24 text-pearl md:pt-40">
+      <div className="light-leak top-1/3 -right-20 h-80 w-80 bg-magenta/25" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
+        <Reveal className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <p className="eyebrow text-champagne">Yaadein Films</p>
+            <h2 className="mt-3 text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl">Watch the <span className="text-gold-gradient italic">moments</span></h2>
+          </div>
+          <p className="max-w-sm text-sm text-pearl/60">Short films from celebrations we've crafted — tap any film to watch.</p>
+        </Reveal>
+        <div className="mt-10 grid gap-4 lg:grid-cols-[1.6fr_1fr] lg:gap-5">
+          <Reveal><FilmCard f={feat} big onOpen={onOpen} /></Reveal>
+          <div className="swipe-row -mx-5 scroll-px-5 px-5 lg:mx-0 lg:grid lg:grid-rows-3 lg:gap-5 lg:overflow-visible lg:px-0">
+            {rest.map((f, i) => (
+              <Reveal key={f.title} delay={0.1 + i * 0.08} className="w-[72%] sm:w-[46%] lg:w-auto"><FilmCard f={f} onOpen={onOpen} /></Reveal>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FilmCard({ f, big, onOpen }: { f: Film; big?: boolean; onOpen: (f: Film) => void }) {
+  return (
+    <button onClick={() => onOpen(f)} aria-label={`Play film: ${f.title}`} className={`group relative block w-full overflow-hidden rounded-2xl text-left ring-1 ring-pearl/10 ${big ? "aspect-[4/5] sm:aspect-video lg:h-full lg:aspect-auto lg:min-h-[480px]" : "aspect-video lg:aspect-auto lg:h-full"}`}>
+      <img src={f.thumb} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
+      <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/30 to-transparent transition-opacity group-hover:opacity-80" />
+      <span className="glass-dark eyebrow absolute top-3 left-3 rounded-full px-3 py-1.5 text-[0.58rem] text-champagne">{f.cat}</span>
+      <span className="glass-dark absolute top-3 right-3 rounded-full px-2.5 py-1 text-xs tabular-nums">{f.duration}</span>
+      <span className={`absolute grid place-items-center rounded-full text-midnight transition-transform duration-500 group-hover:scale-110 ${big ? "bg-gold top-1/2 left-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 shadow-gold" : "bg-pearl/90 bottom-3 right-3 h-11 w-11"}`}>
+        {big && <span className="absolute inset-0 animate-ping rounded-full bg-gold/40" />}
+        <Play size={big ? 24 : 15} fill="currentColor" className="ml-0.5" />
+      </span>
+      <div className={`absolute bottom-0 left-0 p-4 ${big ? "md:p-7" : "pr-16"}`}>
+        {big && <p className="eyebrow text-[0.6rem] text-champagne">Featured film</p>}
+        <h3 className={`${big ? "mt-2 text-3xl md:text-5xl" : "text-xl"} leading-tight`}>{f.title}</h3>
+      </div>
+    </button>
+  );
+}
+
+function VideoModal({ film, onClose }: { film: Film | null; onClose: () => void }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!film) return;
+    setReady(false);
+    document.body.style.overflow = "hidden";
+    const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", k);
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", k); };
+  }, [film, onClose]);
+  return (
+    <AnimatePresence>
+      {film && (
+        <motion.div role="dialog" aria-modal="true" aria-label={film.title} className="fixed inset-0 z-[80] grid place-items-center bg-midnight/95 p-4 backdrop-blur-md" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} onClick={onClose}>
+          <button aria-label="Close video" onClick={onClose} className="absolute top-4 right-4 grid h-12 w-12 place-items-center rounded-full border border-pearl/30 text-pearl transition hover:border-champagne"><X /></button>
+          <motion.div initial={{ scale: 0.9, y: 30, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.94, y: 20, opacity: 0 }} transition={{ duration: 0.5, ease }} className="w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
+            <div className="relative aspect-video overflow-hidden rounded-2xl bg-navy shadow-soft ring-1 ring-gold/20">
+              {!ready && <div className="skeleton-dark absolute inset-0 grid place-items-center"><span className="eyebrow text-champagne/70">Loading film…</span></div>}
+              <iframe className="absolute inset-0 h-full w-full" src={`https://www.youtube-nocookie.com/embed/${film.youtubeId}?autoplay=1&rel=0`} title={film.title} onLoad={() => setReady(true)} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen />
+            </div>
+            <div className="mt-4 flex items-center justify-between text-pearl">
+              <p className="font-display text-2xl">{film.title}</p>
+              <span className="eyebrow text-champagne">{film.cat} · {film.duration}</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ---------------- TESTIMONIALS (bright, swipeable) ---------------- */
+function Testimonials() {
+  const row = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const onScroll = () => {
+    const el = row.current;
+    if (!el) return;
+    setActive(Math.round(el.scrollLeft / (el.scrollWidth / testimonials.length)));
+  };
+  return (
+    <section className="relative overflow-hidden bg-[linear-gradient(180deg,var(--navy),var(--ivory)_16%)] pt-28 pb-24 md:pt-40">
+      <div className="absolute top-40 left-1/2 h-72 w-[60%] -translate-x-1/2 rounded-full bg-lavender/20 blur-[100px]" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
+        <Reveal><SectionHead eyebrow="Client Stories" title={<>People who found their <span className="text-gold-gradient italic">yaadein</span> with us</>} /></Reveal>
+        <div ref={row} onScroll={onScroll} className="swipe-row -mx-5 mt-10 scroll-px-5 px-5 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
           {testimonials.map((t, i) => (
-            <Reveal key={t.name} delay={i * 0.1}>
-              <figure className="glass-light h-full rounded-2xl p-8 shadow-soft">
-                <Quote className="text-gold" size={28} />
-                <blockquote className="mt-4 font-display text-2xl leading-snug">"{t.quote}"</blockquote>
-                <div className="mt-5 flex gap-0.5 text-gold">{Array.from({ length: 5 }).map((_, k) => <Star key={k} size={14} fill="currentColor" />)}</div>
-                <figcaption className="mt-5 border-t border-border pt-5">
-                  <p className="font-semibold">{t.name}</p>
-                  <p className="text-xs text-muted-foreground">{t.event}</p>
+            <Reveal key={t.name} delay={i * 0.1} className="w-[86%] md:w-auto">
+              <figure className="flex h-full flex-col rounded-2xl border border-gold/15 bg-pearl p-7 shadow-soft md:p-8">
+                <Quote className="text-gold" size={26} />
+                <blockquote className="mt-4 flex-1 font-display text-[1.45rem] leading-snug md:text-2xl">"{t.quote}"</blockquote>
+                <div className="mt-5 flex gap-0.5 text-gold" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map((_, k) => <Star key={k} size={14} fill="currentColor" />)}</div>
+                <figcaption className="mt-5 flex items-center gap-3 border-t border-border pt-5">
+                  <span className="bg-gold grid h-10 w-10 shrink-0 place-items-center rounded-full font-display text-lg text-midnight">{t.name[0]}</span>
+                  <span><span className="block font-semibold">{t.name}</span><span className="text-xs text-muted-foreground">{t.event}</span></span>
                 </figcaption>
               </figure>
             </Reveal>
           ))}
+        </div>
+        <div className="mt-6 flex justify-center gap-2 md:hidden" aria-hidden>
+          {testimonials.map((_, i) => <span key={i} className={`h-1.5 rounded-full transition-all ${i === active ? "w-6 bg-gold" : "w-1.5 bg-foreground/20"}`} />)}
         </div>
       </div>
     </section>
