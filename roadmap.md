@@ -9,4 +9,4 @@
 - [x] Add hero video, compact non-home video headers, and distinct Home/About/Events/Gallery film layouts
 - [x] Verify playback and mobile layouts; deliver media replacement documentation
 
-- [ ] Rename company, install transparent supplied logo and slogan, and verify owner WhatsApp actions
+- [x] Rename company, install transparent supplied logo and slogan, and verify owner WhatsApp actions
