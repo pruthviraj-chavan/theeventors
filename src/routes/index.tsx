@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, Play, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { categories, films, images, showcase, testimonials } from "@/lib/data";
+import { categories, films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
 import { EventVideo } from "@/components/site/EventVideo";
 import { FilmModal, FilmTile } from "@/components/site/FilmGallery";
 import { heroFilm } from "@/lib/media";
@@ -16,10 +16,10 @@ export const Route = createFileRoute("/")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Yaadein — We don't plan events. We craft yaadein." },
+      { title: "The Eventors — We manage बेहतर" },
       { name: "description", content: "Luxury wedding, corporate, social and birthday experiences in Pune and across India. Celebrations turned into memories." },
-      { property: "og:title", content: "Yaadein — Events & Experiences" },
-      { property: "og:description", content: "We don't plan events. We craft yaadein. यादें जो हमेशा रहें." },
+      { property: "og:title", content: "The Eventors — Events & Experiences" },
+      { property: "og:description", content: "We manage बेहतर. Wedding, corporate, social and birthday experiences." },
     ],
   }),
   component: Home,
@@ -55,7 +55,7 @@ function Hero({ onPlay }: { onPlay: () => void }) {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
   const fgY = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const words = ["We", "don't", "plan", "events."];
+  const words = ["The"];
   return (
     <section ref={ref} className="grain relative overflow-hidden bg-midnight text-pearl">
       {/* layer 1: background photo / film */}
@@ -82,11 +82,11 @@ function Hero({ onPlay }: { onPlay: () => void }) {
             ))}
           </span>
           <span className="block overflow-hidden pb-[0.12em]">
-            <motion.span className="inline-block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.9, ease }}>We craft</motion.span>{" "}
-            <motion.span className="text-gold-gradient inline-block pr-2 text-[1.42em] italic" initial={{ opacity: 0, filter: "blur(14px)", scale: 1.08 }} animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }} transition={{ duration: 1.4, delay: 1.1, ease }}>yaadein</motion.span>
+            <motion.span className="inline-block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.9, ease }}>Eventors</motion.span>{" "}
+            <motion.span className="text-gold-gradient inline-block pr-2 italic" initial={{ opacity: 0, filter: "blur(14px)", scale: 1.08 }} animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }} transition={{ duration: 1.4, delay: 1.1, ease }}></motion.span>
           </span>
         </h1>
-        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }} className="font-hindi text-xl text-champagne sm:text-3xl">यादें जो हमेशा रहें</motion.p>
+        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }} className="font-hindi text-xl text-champagne sm:text-3xl">We manage बेहतर</motion.p>
         <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.65, duration: 0.8 }} className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-pearl/75">From intimate celebrations to grand occasions, we create experiences that stay in hearts forever.</motion.p>
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.8 }} className="mt-8 grid grid-cols-1 gap-3 min-[430px]:grid-cols-[auto_auto] min-[430px]:justify-start sm:flex">
           <Link to="/events" className="btn-gold shine justify-center">Explore Our Events <ArrowRight size={16} /></Link>
@@ -190,8 +190,8 @@ function Why() {
   const cards = [
     { I: Sparkles, t: "Creative Concepts", d: "Unique themes tailored to your story." },
     { I: ClipboardCheck, t: "End-to-End Care", d: "From first sketch to last guest, handled." },
-    { I: Users, t: "Experienced Team", d: "Planners who understand your vision." },
-    { I: Gem, t: "Memorable Moments", d: "We create yaadein, not just events." },
+    { I: Users, t: "Experienced Team", d: "A team that understands your vision." },
+    { I: Gem, t: "Memorable Moments", d: "We create memories, not just events." },
   ];
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(180deg,var(--ivory)_0%,var(--ivory)_70%,var(--midnight)_100%)] pt-8 pb-32 md:pb-44">
@@ -199,7 +199,7 @@ function Why() {
       <div className="absolute top-40 -left-32 h-80 w-80 rounded-full bg-peach/40 blur-[100px]" />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
         <div className="grid gap-6 md:grid-cols-2 md:items-end md:gap-10">
-          <Reveal><SectionHead eyebrow="Why Yaadein" title={<>More than an <span className="text-accent-gradient italic">event planner</span></>} /></Reveal>
+          <Reveal><SectionHead eyebrow="Why The Eventors" title={<>More than an <span className="text-accent-gradient italic">celebration</span></>} /></Reveal>
           <Reveal delay={0.1}><p className="max-w-md text-muted-foreground">We believe every celebration has a story. Our job is to listen, understand and transform your vision into an unforgettable experience.</p></Reveal>
         </div>
         <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
@@ -264,7 +264,7 @@ function Process() {
             ))}
           </ol>
         </div>
-        <Reveal className="mt-14"><Link to="/contact" className="btn-gold shine">Let's Plan Your Event <ArrowRight size={16} /></Link></Reveal>
+        <Reveal className="mt-14"><a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn-gold shine">Let's Plan Your Event <ArrowRight size={16} /></a></Reveal>
       </div>
     </section>
   );
@@ -282,7 +282,7 @@ function Showcase() {
     <section className="overflow-hidden bg-[linear-gradient(180deg,var(--midnight),var(--ivory)_22%)] pt-24 pb-24 md:pt-36">
       <div className="mx-auto max-w-7xl px-5 sm:px-6">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <Reveal><SectionHead eyebrow="Showcase" title={<>Moments we've turned into <span className="text-accent-gradient italic">yaadein</span></>} /></Reveal>
+          <Reveal><SectionHead eyebrow="Showcase" title={<>Moments we've turned into <span className="text-accent-gradient italic">memories</span></>} /></Reveal>
           <div className="hidden gap-2 md:flex">
             <button onClick={() => scroll(-1)} aria-label="Previous" className="grid h-12 w-12 place-items-center rounded-full border border-border bg-pearl transition hover:border-gold"><ChevronLeft size={18} /></button>
             <button onClick={() => scroll(1)} aria-label="Next" className="grid h-12 w-12 place-items-center rounded-full border border-border bg-pearl transition hover:border-gold"><ChevronRight size={18} /></button>
@@ -325,7 +325,7 @@ function Films({ onOpen }: { onOpen: (f: Film) => void }) {
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
         <Reveal className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <p className="eyebrow text-champagne">Yaadein Films</p>
+            <p className="eyebrow text-champagne">The Eventors Films</p>
             <h2 className="mt-3 text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl">Watch the <span className="text-gold-gradient italic">moments</span></h2>
           </div>
           <p className="max-w-sm text-sm text-pearl/60">A grand welcome. A shared evening. A moment that stays.</p>
@@ -360,7 +360,7 @@ function Testimonials() {
     <section className="relative overflow-hidden bg-[linear-gradient(180deg,var(--navy),var(--ivory)_16%)] pt-28 pb-24 md:pt-40">
       <div className="absolute top-40 left-1/2 h-72 w-[60%] -translate-x-1/2 rounded-full bg-lavender/20 blur-[100px]" />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
-        <Reveal><SectionHead eyebrow="Client Stories" title={<>People who found their <span className="text-gold-gradient italic">yaadein</span> with us</>} /></Reveal>
+        <Reveal><SectionHead eyebrow="Client Stories" title={<>People who found their <span className="text-gold-gradient italic">memories</span> with us</>} /></Reveal>
         <div ref={row} onScroll={onScroll} className="swipe-row -mx-5 mt-10 scroll-px-5 px-5 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
           {testimonials.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.1} className="w-[86%] md:w-auto">

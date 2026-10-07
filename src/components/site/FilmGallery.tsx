@@ -36,10 +36,10 @@ export function FilmTile({ film, onOpen, className = "", number }: { film: Event
 
 export function FilmGallery({ variant, films = eventFilms }: { variant: "about" | "events" | "gallery"; films?: EventFilm[] }) {
   const [open, setOpen] = useState<EventFilm | null>(null);
-  const titles = { about: "The feeling behind Yaadein", events: "Celebrations in motion", gallery: "The moving collection" };
+  const titles = { about: "The feeling behind The Eventors", events: "Celebrations in motion", gallery: "The moving collection" };
   return <section className={`overflow-hidden py-16 md:py-24 ${variant === "about" ? "bg-ivory text-foreground" : "bg-midnight text-pearl"}`}>
     <div className="mx-auto max-w-7xl px-5 sm:px-6">
-      <div className="mb-9 flex flex-wrap items-end justify-between gap-4"><div><p className="eyebrow text-gold">Yaadein Films</p><h2 className="mt-3 text-4xl leading-tight sm:text-5xl">{titles[variant]}</h2></div><span className="text-xs text-gold">{films.length.toString().padStart(2, "0")} short films</span></div>
+      <div className="mb-9 flex flex-wrap items-end justify-between gap-4"><div><p className="eyebrow text-gold">The Eventors Films</p><h2 className="mt-3 text-4xl leading-tight sm:text-5xl">{titles[variant]}</h2></div><span className="text-xs text-gold">{films.length.toString().padStart(2, "0")} short films</span></div>
       <div className={variant === "about" ? "grid gap-5 md:grid-cols-[1.6fr_1fr]" : variant === "events" ? "swipe-row pb-3" : "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"}>
         {films.map((film, i) => <FilmTile key={film.id} film={film} onOpen={setOpen} number={i + 1} className={variant === "events" ? "aspect-[4/5] w-[84%] sm:w-[360px]" : variant === "about" && i === 0 ? "aspect-video md:row-span-2 md:aspect-auto md:min-h-[500px]" : "aspect-video"} />)}
       </div>

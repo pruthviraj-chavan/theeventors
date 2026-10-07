@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Eye, Target, HeartHandshake, Users } from "lucide-react";
-import { images } from "@/lib/data";
+import { images, whatsappLink } from "@/lib/data";
 import { PageHero, SectionHead } from "@/components/site/PageHero";
 import { Counter, Reveal } from "@/components/site/Reveal";
 import { FinalCta } from "@/components/site/FinalCta";
@@ -12,9 +12,9 @@ export const Route = createFileRoute("/about")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "About Yaadein — Turning Moments into Memories" },
-      { name: "description", content: "Meet Yaadein: a passionate team crafting weddings, corporate and social experiences with heart, creativity and flawless execution." },
-      { property: "og:title", content: "About Yaadein" },
+      { title: "About The Eventors — Turning Moments into Memories" },
+      { name: "description", content: "Meet The Eventors: a passionate team crafting weddings, corporate and social experiences with heart, creativity and flawless execution." },
+      { property: "og:title", content: "About The Eventors" },
       { property: "og:description", content: "Events aren't just occasions — they're emotions, connections and memories." },
     ],
   }),
@@ -30,16 +30,16 @@ function About() {
   ];
   return (
     <>
-      <PageHero eyebrow="About Yaadein" title={<>Turning moments into <span className="text-gold-gradient italic">Yaadein</span></>} sub="At Yaadein, we believe events are not just occasions — they are emotions, connections and memories that stay with you forever." img={images.wedding} />
+      <PageHero eyebrow="About The Eventors" title={<>The <span className="text-gold-gradient italic">Eventors</span></>} sub="At The Eventors, we believe events are not just occasions — they are emotions, connections and memories that stay with you forever." img={images.wedding} />
       <section className="bg-ivory py-16 md:py-24">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-6 md:gap-14 lg:grid-cols-2">
           <Reveal>
-            <img src={images.team} alt="Yaadein team styling a banquet" loading="lazy" className="aspect-[4/3] w-full rounded-3xl object-cover shadow-soft" />
+            <img src={images.team} alt="The Eventors team styling a banquet" loading="lazy" className="aspect-[4/3] w-full rounded-3xl object-cover shadow-soft" />
           </Reveal>
           <Reveal delay={0.1}>
             <SectionHead eyebrow="Who we are" title={<>A decade of <span className="text-accent-gradient italic">celebrations</span></>} />
-            <p className="mt-6 text-muted-foreground">Yaadein began in Pune with a simple belief: the best events aren't the biggest — they're the ones that feel the most like you. Ten years and over a thousand celebrations later, that belief still shapes every mandap we build and every stage we light.</p>
-            <p className="mt-4 text-muted-foreground">We listen first, design second, and execute with obsessive care — so you can be fully present in the moment.</p>
+            <p className="mt-6 text-muted-foreground">The Eventors began in Pune with a simple belief: the best events aren't the biggest — they're the ones that feel the most like you. Ten years and over a thousand celebrations later, that belief still shapes every mandap we build and every stage we light.</p>
+            <p className="mt-4 text-muted-foreground">We manage बेहतर. We listen first, design second, and execute with obsessive care — so you can be fully present in the moment.</p>
             <div className="mt-8 grid grid-cols-3 gap-6">
               {[[500, "+", "Happy clients"], [1000, "+", "Events"], [10, "+", "Years"]].map(([n, s, l]) => (
                 <div key={l as string}><div className="font-display text-4xl text-gold-gradient"><Counter to={n as number} suffix={s as string} /></div><p className="text-xs text-muted-foreground">{l}</p></div>
@@ -63,7 +63,7 @@ function About() {
           </div>
           <Reveal className="mt-20 text-center">
             <h2 className="text-[2.3rem] leading-tight sm:text-5xl md:text-6xl">Every event has a story.<br /><span className="text-gold-gradient italic">Let's craft yours.</span></h2>
-            <Link to="/contact" className="btn-gold mt-8">Plan Your Event <ArrowRight size={16} /></Link>
+            <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn-gold mt-8">Plan Your Event <ArrowRight size={16} /></a>
           </Reveal>
         </div>
       </section>

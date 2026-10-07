@@ -1,37 +1,31 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import logo from "@/assets/eventors-logo-light.png";
 
 export function LogoMark({ size = 56, draw = false }: { size?: number; draw?: boolean }) {
-  const path = "M16 4c3 4 3 8 0 12-3-4-3-8 0-12Zm0 12c4-2 8-1 11 2-4 2-8 1-11-2Zm0 0c-4-2-8-1-11 2 4 2 8 1 11-2Zm0 0v12";
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden>
-      <defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stopColor="#F4D58D" /><stop offset="1" stopColor="#D9A441" /></linearGradient></defs>
-      <motion.path d={path} fill="none" stroke="url(#lg)" strokeWidth="1.2" strokeLinecap="round"
-        initial={draw ? { pathLength: 0 } : false} animate={{ pathLength: 1 }} transition={{ duration: 1.4, ease: "easeInOut" }} />
-    </svg>
-  );
+  return <motion.img src={logo} alt="" width={size} height={size} className="object-contain" initial={draw ? { opacity: 0 } : false} animate={{ opacity: 1 }} transition={{ duration: 1.4 }} />;
 }
 
 /** Luxury intro: shown once per session. */
 export function IntroLoader() {
   const [show, setShow] = useState(true);
   useEffect(() => {
-    if (sessionStorage.getItem("yaadein-intro")) { setShow(false); return; }
-    const t = setTimeout(() => { setShow(false); sessionStorage.setItem("yaadein-intro", "1"); }, 2300);
+    if (sessionStorage.getItem("memories-intro")) { setShow(false); return; }
+    const t = setTimeout(() => { setShow(false); sessionStorage.setItem("memories-intro", "1"); }, 2300);
     return () => clearTimeout(t);
   }, []);
   return (
     <AnimatePresence>
       {show && (
-        <motion.div role="status" aria-label="Loading Yaadein" className="bg-night grain fixed inset-0 z-[100] grid place-items-center"
+        <motion.div role="status" aria-label="Loading The Eventors" className="bg-night grain fixed inset-0 z-[100] grid place-items-center"
           exit={{ clipPath: "inset(0 0 100% 0)" }} transition={{ duration: 0.9, ease: [0.7, 0, 0.2, 1] }}>
           <div className="flex flex-col items-center text-pearl">
-            <LogoMark size={64} draw />
+            <LogoMark size={220} draw />
             <div className="mt-5 overflow-hidden">
-              <motion.p initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ delay: 0.5, duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }} className="font-display text-5xl tracking-wide">Yaadein</motion.p>
+              <motion.p initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ delay: 0.5, duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }} className="font-display text-5xl tracking-wide">The Eventors</motion.p>
             </div>
             <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.9, duration: 1 }} className="bg-gold mt-4 block h-px w-40 origin-left" />
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} className="eyebrow mt-4 text-champagne/80">Crafting yaadein</motion.p>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} className="eyebrow mt-4 text-champagne/80">We manage बेहतर</motion.p>
           </div>
         </motion.div>
       )}
