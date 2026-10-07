@@ -252,3 +252,25 @@ html, body { overflow-x: clip; }
   section figure { transition: translate 500ms ease, border-color 500ms ease, box-shadow 500ms ease; }
   section figure:hover { translate: 0 -5px; border-color: var(--gold); box-shadow: var(--shadow-gold); }
 }
+
+:root {
+  --stories-wash: linear-gradient(120deg, color-mix(in oklab, var(--gold) 12%, transparent), transparent 45%, color-mix(in oklab, var(--magenta) 8%, transparent));
+  --stories-card-wash: linear-gradient(135deg, color-mix(in oklab, var(--gold) 12%, transparent), transparent 65%);
+}
+@keyframes stories-camera {
+  from { transform: scale(1.03) translateX(-0.5%); }
+  to { transform: scale(1.1) translateX(0.5%); }
+}
+.stories-photo { animation: stories-camera 22s ease-in-out infinite alternate; }
+.client-stories[data-paused="true"] .stories-photo,
+.client-stories:hover .stories-photo,
+.client-stories:focus-within .stories-photo { animation-play-state: paused; }
+.stories-colour-wash { background: var(--stories-wash); }
+.stories-card::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: var(--stories-card-wash); opacity: 0; transition: opacity 650ms ease;
+}
+.stories-card:hover::before { opacity: 1; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .stories-card:hover { background-color: color-mix(in oklab, var(--pearl) 8%, transparent); }
+}
