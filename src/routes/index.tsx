@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, Play, Pause, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { categories, films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
@@ -351,37 +351,44 @@ function FilmCard({ f, big, onOpen }: { f: Film; big?: boolean; onOpen: (f: Film
   return <FilmTile film={f} onOpen={onOpen} className={big ? "aspect-[4/5] sm:aspect-video lg:h-full lg:aspect-auto lg:min-h-[600px]" : "aspect-video lg:h-full lg:min-h-[120px] lg:aspect-auto"} />;
 }
 
-/* ---------------- TESTIMONIALS (bright, swipeable) ---------------- */
+/* ---------------- TESTIMONIALS (cinematic glass slate) ---------------- */
 function Testimonials() {
-  const row = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const onScroll = () => {
-    const el = row.current;
-    if (!el) return;
-    setActive(Math.round(el.scrollLeft / (el.scrollWidth / testimonials.length)));
-  };
+  const section = useRef<HTMLElement>(null);
+  const visible = useInView(section, { amount: 0.15 });
+  const reducedMotion = useReducedMotion();
+  const [paused, setPaused] = useState(false);
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(180deg,var(--navy),var(--ivory)_16%)] pt-28 pb-24 md:pt-40">
-      <div className="absolute top-40 left-1/2 h-72 w-[60%] -translate-x-1/2 rounded-full bg-lavender/20 blur-[100px]" />
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
-        <Reveal><SectionHead eyebrow="Client Stories" title={<>People who found their <span className="text-gold-gradient italic">memories</span> with us</>} /></Reveal>
-        <div ref={row} onScroll={onScroll} className="swipe-row -mx-5 mt-10 scroll-px-5 px-5 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
+    <section ref={section} className="client-stories group/stories relative overflow-hidden bg-midnight py-20 text-pearl md:py-28" data-paused={paused || !visible ? "true" : "false"}>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <img src={images.corporate} alt="" loading="lazy" className="stories-photo h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-midnight/70" />
+        <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-midnight/60" />
+        <div className="stories-colour-wash absolute inset-0" />
+      </div>
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 md:px-12">
+        <div className="flex items-start justify-between gap-4">
+          <Reveal className="max-w-3xl">
+            <p className="eyebrow flex items-center gap-3 text-champagne"><span className="h-px w-8 shrink-0 bg-gold/60" />Client Stories</p>
+            <h2 className="mt-5 text-4xl leading-[1.1] sm:text-5xl md:text-6xl">People who found their <span className="italic text-champagne">memories</span> with us</h2>
+          </Reveal>
+          <Button variant="ghost" size="icon" onClick={() => setPaused(!paused)} aria-label={paused ? "Resume Client Stories animation" : "Pause Client Stories animation"} title={paused ? "Resume animation" : "Pause animation"} className="mt-1 h-11 w-11 shrink-0 rounded-full border border-pearl/20 text-champagne hover:bg-pearl/10 hover:text-pearl motion-reduce:hidden">{paused ? <Play /> : <Pause />}</Button>
+        </div>
+        <div className="mt-12 grid gap-5 md:mt-16 md:grid-cols-3 md:gap-6">
           {testimonials.map((t, i) => (
-            <Reveal key={t.name} delay={i * 0.1} className="w-[86%] md:w-auto">
-              <figure className="flex h-full flex-col rounded-2xl border border-gold/15 bg-pearl p-7 shadow-soft md:p-8">
-                <Quote className="text-gold" size={26} />
-                <blockquote className="mt-4 flex-1 font-display text-[1.45rem] leading-snug md:text-2xl">"{t.quote}"</blockquote>
-                <div className="mt-5 flex gap-0.5 text-gold" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map((_, k) => <Star key={k} size={14} fill="currentColor" />)}</div>
-                <figcaption className="mt-5 flex items-center gap-3 border-t border-border pt-5">
-                  <span className="bg-gold grid h-10 w-10 shrink-0 place-items-center rounded-full font-display text-lg text-midnight">{t.name[0]}</span>
-                  <span><span className="block font-semibold">{t.name}</span><span className="text-xs text-muted-foreground">{t.event}</span></span>
+            <Reveal key={t.name} delay={i * 0.14} className="min-w-0">
+              <figure className="stories-card group/card relative flex h-full flex-col overflow-hidden rounded-lg border border-pearl/15 bg-pearl/5 p-7 backdrop-blur-md md:min-h-[330px] md:p-8">
+                <Quote className="text-gold/70 transition-transform duration-500 group-hover/card:rotate-6" size={30} />
+                <blockquote className="relative mt-5 flex-1 text-base leading-relaxed text-pearl/90 italic md:text-lg">{t.quote}</blockquote>
+                <figcaption className="relative mt-9 flex items-center gap-4 border-t border-pearl/15 pt-6">
+                  <span className="relative grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold/35 bg-gold/15 font-display text-xl text-champagne">
+                    {t.name[0]}
+                    <span className="absolute -right-1 -bottom-1 grid h-5 w-5 place-items-center rounded-full border-2 border-midnight bg-gold text-midnight"><Star size={9} fill="currentColor" aria-hidden /></span>
+                  </span>
+                  <span className="min-w-0"><span className="block text-sm font-semibold">{t.name}</span><span className="mt-1 block text-xs text-champagne/80">{t.event}</span></span>
                 </figcaption>
               </figure>
             </Reveal>
           ))}
-        </div>
-        <div className="mt-6 flex justify-center gap-2 md:hidden" aria-hidden>
-          {testimonials.map((_, i) => <span key={i} className={`h-1.5 rounded-full transition-all ${i === active ? "w-6 bg-gold" : "w-1.5 bg-foreground/20"}`} />)}
         </div>
       </div>
     </section>
