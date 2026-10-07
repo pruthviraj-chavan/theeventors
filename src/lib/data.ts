@@ -14,7 +14,7 @@ export const CONTACT = {
   phone: "+91 98044 89525",
   phoneRaw: "919804489525",
   email: "hello@yaadein.events",
-  city: "Pune, Maharashtra, India",
+  city: "Flat No. 3, Golden Residency, Co-operative Building, Jheel Bagan, Hatiara, Baguihati, Kolkata - 700157",
 };
 
 export const whatsappLink = (msg = "Hi The Eventors! I'd like to enquire about an event.") =>
