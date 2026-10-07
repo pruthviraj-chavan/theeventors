@@ -1,0 +1,122 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
+import { z } from "zod";
+import { Phone, Mail, MapPin, Send, Zap, MessageSquare, Package, CheckCircle2 } from "lucide-react";
+import { CONTACT, images, whatsappLink } from "@/lib/data";
+import { Particles, Reveal } from "@/components/site/Reveal";
+
+export const Route = createFileRoute("/contact")({
+  validateSearch: (s: Record<string, unknown>): { type?: string } => (typeof s['type'] === "string" ? { type: s['type'] as string } : {}),
+  head: () => ({
+    meta: [
+      { title: "Contact Yaadein — Let's Create Your Next Yaad" },
+      { name: "description", content: "Enquire about your wedding, corporate, social or birthday event. Free consultation, quick response within 24 hours." },
+      { property: "og:title", content: "Contact Yaadein" },
+      { property: "og:description", content: "Tell us about your event and let our experts make it unforgettable." },
+    ],
+  }),
+  component: Contact,
+});
+
+const schema = z.object({
+  name: z.string().trim().min(2, "Please enter your name").max(80),
+  phone: z.string().trim().regex(/^[+\d\s-]{8,16}$/, "Enter a valid phone number"),
+  email: z.string().trim().email("Enter a valid email").max(120),
+  type: z.string(),
+  date: z.string().optional(),
+  guests: z.string().max(10).optional(),
+  message: z.string().trim().max(1000).optional(),
+});
+
+const field = "w-full rounded-xl border border-pearl/15 bg-pearl/5 px-4 py-3 text-sm text-pearl outline-none transition focus:border-gold placeholder:text-pearl/35";
+
+function Contact() {
+  const { type } = Route.useSearch();
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [done, setDone] = useState(false);
+
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>;
+    const r = schema.safeParse(data);
+    if (!r.success) {
+      setErrors(Object.fromEntries(r.error.issues.map((i) => [i.path[0], i.message])));
+      return;
+    }
+    setErrors({});
+    const d = r.data;
+    const msg = `Hi Yaadein! Enquiry:\nName: ${d.name}\nPhone: ${d.phone}\nEmail: ${d.email}\nEvent: ${d.type}\nDate: ${d.date || "-"}\nGuests: ${d.guests || "-"}\n${d.message || ""}`;
+    window.open(whatsappLink(msg), "_blank", "noopener");
+    setDone(true);
+  };
+
+  return (
+    <section className="bg-night grain relative overflow-hidden pt-36 pb-24 text-pearl">
+      <img src={images.hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 to-midnight" />
+      <Particles count={10} />
+      <div className="relative mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
+        <Reveal>
+          <p className="eyebrow text-champagne">Contact</p>
+          <h1 className="mt-4 text-5xl leading-[1.02] md:text-7xl">Let's create your <span className="text-gold-gradient italic">Next Yaad</span></h1>
+          <p className="mt-5 max-w-md text-pearl/70">Tell us about your event and let our experts make it unforgettable.</p>
+          <ul className="mt-10 space-y-6">
+            {[
+              { I: Phone, l: "Call us", v: CONTACT.phone, h: `tel:${CONTACT.phoneRaw}` },
+              { I: Mail, l: "Email us", v: CONTACT.email, h: `mailto:${CONTACT.email}` },
+              { I: MapPin, l: "Visit us", v: CONTACT.city },
+            ].map(({ I, l, v, h }) => (
+              <li key={l} className="flex items-center gap-4">
+                <span className="bg-gold grid h-12 w-12 place-items-center rounded-full text-midnight"><I size={18} /></span>
+                <div><p className="text-xs text-pearl/50">{l}</p>{h ? <a href={h} className="text-lg hover:text-champagne">{v}</a> : <p className="text-lg">{v}</p>}</div>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+            {[[Zap, "Quick Response", "Within 24 hours"], [MessageSquare, "Free Consultation", "Talk to our experts"], [Package, "Custom Packages", "Tailored to budget"]].map(([I, t, d]) => {
+              const Icon = I as typeof Zap;
+              return (
+                <div key={t as string} className="glass-dark rounded-2xl p-4"><Icon size={18} className="text-champagne" /><p className="mt-3 text-sm font-semibold">{t as string}</p><p className="text-xs text-pearl/50">{d as string}</p></div>
+              );
+            })}
+          </div>
+        </Reveal>
+        <Reveal delay={0.15}>
+          <div className="glass-dark rounded-3xl p-8 shadow-soft">
+            {done ? (
+              <div className="py-16 text-center">
+                <CheckCircle2 size={48} className="mx-auto text-champagne" />
+                <h2 className="mt-5 text-4xl">Thank you!</h2>
+                <p className="mt-3 text-pearl/70">Your enquiry is ready in WhatsApp — send it and we'll reply within 24 hours.</p>
+                <button onClick={() => setDone(false)} className="btn-ghost-light mt-8">Send another enquiry</button>
+              </div>
+            ) : (
+              <form onSubmit={submit} noValidate className="grid gap-4 sm:grid-cols-2">
+                <h2 className="text-3xl sm:col-span-2">Enquire about your event</h2>
+                {[
+                  { n: "name", l: "Your name *", t: "text" },
+                  { n: "phone", l: "Phone number *", t: "tel" },
+                  { n: "email", l: "Email address *", t: "email" },
+                ].map((f) => (
+                  <label key={f.n} className="text-xs text-pearl/60">{f.l}
+                    <input name={f.n} type={f.t} className={`${field} mt-1.5`} />
+                    {errors[f.n] && <span className="mt-1 block text-magenta">{errors[f.n]}</span>}
+                  </label>
+                ))}
+                <label className="text-xs text-pearl/60">Event type
+                  <select name="type" defaultValue={type ?? "Wedding"} className={`${field} mt-1.5 [&>option]:bg-navy`}>
+                    {["Wedding", "Corporate", "Social", "Birthday", "Other"].map((o) => <option key={o}>{o}</option>)}
+                  </select>
+                </label>
+                <label className="text-xs text-pearl/60">Event date<input name="date" type="date" className={`${field} mt-1.5 [color-scheme:dark]`} /></label>
+                <label className="text-xs text-pearl/60">Expected guests<input name="guests" type="number" min={1} className={`${field} mt-1.5`} /></label>
+                <label className="text-xs text-pearl/60 sm:col-span-2">Your message<textarea name="message" rows={4} placeholder="Tell us about your event, ideas, requirements…" className={`${field} mt-1.5 resize-none`} /></label>
+                <button className="btn-gold justify-center sm:col-span-2">Send Enquiry <Send size={16} /></button>
+              </form>
+            )}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
