@@ -43,7 +43,7 @@ function Events() {
                 <h2 className="mt-3 text-5xl md:text-6xl">{c.desc}</h2>
                 <p className="mt-5 max-w-md text-muted-foreground">{c.long}</p>
                 <ul className="mt-7 grid grid-cols-2 gap-3 text-sm">
-                  {extras[c.name].map((e) => <li key={e} className="flex items-center gap-2"><Check size={15} className="text-gold" />{e}</li>)}
+                  {(extras[c.name] ?? []).map((e) => <li key={e} className="flex items-center gap-2"><Check size={15} className="text-gold" />{e}</li>)}
                 </ul>
                 <Link to="/contact" search={{ type: c.name }} className="btn-gold mt-9">Plan a {c.name} <ArrowRight size={16} /></Link>
               </Reveal>

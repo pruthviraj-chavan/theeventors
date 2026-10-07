@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Facebook, Youtube, Linkedin, Phone, Mail, MapPin, ArrowRight, MessageCircle } from "lucide-react";
+import { Camera, Globe, Play, AtSign, Phone, Mail, MapPin, ArrowRight, MessageCircle } from "lucide-react";
 import { Logo } from "./Nav";
 import { CONTACT, whatsappLink } from "@/lib/data";
 import { useState } from "react";
@@ -14,7 +14,7 @@ export function Footer() {
           <p className="mt-5 max-w-xs text-sm leading-relaxed">We don't just plan events. We craft yaadein that stay forever.</p>
           <p className="font-hindi mt-2 text-champagne/80">यादें जो हमेशा रहें</p>
           <div className="mt-6 flex gap-3">
-            {[Instagram, Facebook, Youtube, Linkedin].map((I, i) => (
+            {[Camera, Globe, Play, AtSign].map((I, i) => (
               <a key={i} href="#" aria-label="Social link" className="grid h-9 w-9 place-items-center rounded-full border border-pearl/15 transition hover:border-gold hover:text-champagne"><I size={15} /></a>
             ))}
           </div>

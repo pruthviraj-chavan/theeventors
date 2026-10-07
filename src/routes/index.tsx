@@ -114,7 +114,7 @@ function Stats() {
         <div className="grid grid-cols-2 divide-border md:grid-cols-4 md:divide-x">
           {s.map((x) => (
             <Reveal key={x.l} className="py-4 text-center">
-              <div className="font-display text-5xl text-gold-gradient md:text-6xl"><Counter to={x.n} suffix={x.suf} decimals={x.d} /></div>
+              <div className="font-display text-5xl text-gold-gradient md:text-6xl"><Counter to={x.n} suffix={x.suf} decimals={x.d ?? 0} /></div>
               <p className="eyebrow mt-2 text-muted-foreground">{x.l}</p>
             </Reveal>
           ))}
