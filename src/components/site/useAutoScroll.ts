@@ -6,6 +6,8 @@ export function useAutoScroll(resetKey: string, enabled: boolean) {
   const row = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
   const reducedMotion = useReducedMotion();
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => { setReduced(!!reducedMotion); }, [reducedMotion]);
 
   useEffect(() => {
     const el = row.current;
@@ -59,5 +61,5 @@ export function useAutoScroll(resetKey: string, enabled: boolean) {
   }, [resetKey, enabled, paused, reducedMotion]);
 
   useEffect(() => { if (row.current) row.current.scrollLeft = 0; }, [resetKey]);
-  return { row, paused, setPaused, reducedMotion: !!reducedMotion };
+  return { row, paused, setPaused, reducedMotion: reduced };
 }

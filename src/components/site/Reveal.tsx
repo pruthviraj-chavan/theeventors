@@ -5,8 +5,8 @@ export function Reveal({ children, delay = 0, className, y = 28 }: { children: R
   const reducedMotion = useReducedMotion();
   return (
     <motion.div
-      className={className}
-      initial={reducedMotion ? false : { opacity: 0, y }}
+      className={`section-reveal ${className ?? ""}`}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, margin: "-40px" }}
       transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : delay, ease: [0.2, 0.7, 0.2, 1] }}

@@ -239,6 +239,9 @@ html, body { overflow-x: clip; }
 
 /* Motion stays inside sections; the page never scrolls itself. */
 .auto-scroll-row { scroll-snap-type: none; scroll-behavior: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal { opacity: 1 !important; transform: none !important; }
+}
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   section h2 { transition: translate 650ms ease; }
   section:hover h2 { translate: 0 -3px; }
