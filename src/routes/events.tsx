@@ -4,6 +4,8 @@ import { categories, images } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { FinalCta } from "@/components/site/FinalCta";
+import { FilmGallery } from "@/components/site/FilmGallery";
+import { videoLibrary } from "@/lib/media";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
@@ -51,6 +53,7 @@ function Events() {
           ))}
         </div>
       </section>
+      <FilmGallery variant="events" films={[videoLibrary.entrance, videoLibrary.courtyard, videoLibrary.dandiya, videoLibrary.estate]} />
       <FinalCta />
     </>
   );

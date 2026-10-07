@@ -8,3 +8,8 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Media architecture
+- Keep all film metadata and placement mappings in `src/lib/media.ts`; CDN pointer imports prevent large runtime media from entering the source bundle.
+- Use `EventVideo` for silent previews and `FilmModal` for full playback; shared loading and accessibility behavior must stay consistent across pages.
+- Store desktop/mobile MP4 renditions and JPEG poster pointers under `src/assets/videos`; optimize original footage offline with H.264, no audio, and faststart before upload.

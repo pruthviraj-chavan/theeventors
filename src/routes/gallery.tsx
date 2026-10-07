@@ -6,6 +6,7 @@ import { EmptyState, useSwitchLoading } from "@/components/site/Loader";
 import { images, showcase } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
+import { FilmGallery } from "@/components/site/FilmGallery";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -36,6 +37,7 @@ function Gallery() {
           ))}
         </div>
       </PageHero>
+      <FilmGallery variant="gallery" />
       <section className="bg-ivory py-14 md:py-20">
         {loading ? (
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 px-5 sm:gap-4 sm:px-6 md:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton aspect-square rounded-2xl" />)}</div>
