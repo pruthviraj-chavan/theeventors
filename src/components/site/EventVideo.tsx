@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { EventFilm } from "@/lib/media";
+import { playbackSource, type EventFilm } from "@/lib/media";
 
 /** Loads only nearby footage, chooses one rendition, and pauses offscreen. */
 export function EventVideo({ film, priority = false, className = "", controls = true }: { film: EventFilm; priority?: boolean; className?: string; controls?: boolean }) {
@@ -16,7 +16,7 @@ export function EventVideo({ film, priority = false, className = "", controls = 
     if (!video) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const rendition = window.matchMedia("(max-width: 767px)").matches ? film.mobile : film.src;
+    const rendition = playbackSource(film, video, window.matchMedia("(max-width: 767px)").matches);
     const load = () => { if ((!reduced.matches && !connection?.saveData) || manual.current === true) setSrc(rendition); };
     const play = () => { if (!document.hidden && manual.current !== false && ((!reduced.matches && !connection?.saveData) || manual.current === true)) void video.play().catch(() => setPlaying(false)); };
     const loader = new IntersectionObserver(([entry]) => { if (entry?.isIntersecting) load(); }, { rootMargin: priority ? "0px" : "180px" });
@@ -31,7 +31,7 @@ export function EventVideo({ film, priority = false, className = "", controls = 
     const video = ref.current;
     if (!video) return;
     if (playing) { manual.current = false; video.pause(); }
-    else { manual.current = true; setSrc(window.matchMedia("(max-width: 767px)").matches ? film.mobile : film.src); void video.play().catch(() => setPlaying(false)); }
+    else { manual.current = true; setSrc(playbackSource(film, video, window.matchMedia("(max-width: 767px)").matches)); void video.play().catch(() => setPlaying(false)); }
   };
   return (
     <div className={`relative overflow-hidden bg-midnight ${className}`}>
