@@ -6,7 +6,7 @@ import { CONTACT, images, whatsappLink } from "@/lib/data";
 import { Particles, Reveal } from "@/components/site/Reveal";
 
 export const Route = createFileRoute("/contact")({
-  validateSearch: (s: Record<string, unknown>) => ({ type: typeof s.type === "string" ? s.type : undefined }),
+  validateSearch: (s: Record<string, unknown>): { type?: string } => (typeof s.type === "string" ? { type: s.type } : {}),
   head: () => ({
     meta: [
       { title: "Contact Yaadein — Let's Create Your Next Yaad" },
