@@ -54,7 +54,7 @@ function Hero({ onPlay }: { onPlay: () => void }) {
   return (
     <section ref={ref} className="grain relative overflow-hidden bg-midnight text-pearl">
       {/* layer 1: background photo / film */}
-      <motion.div style={desktop ? { y: bgY } : undefined} className="absolute inset-0 h-[118%]">
+      <motion.div style={desktop ? { y: bgY } : {}} className="absolute inset-0 h-[118%]">
         <img src={images.hero} alt="Candlelit floral mandap at a palace wedding" width={1920} height={1088} fetchPriority="high" className="animate-slow-zoom h-full w-full object-cover object-[62%_center]" />
         {HERO_VIDEO && desktop && (
           <video className="absolute inset-0 h-full w-full object-cover" src={HERO_VIDEO} poster={images.hero} autoPlay muted loop playsInline preload="none" />
@@ -69,7 +69,7 @@ function Hero({ onPlay }: { onPlay: () => void }) {
       <div className="light-leak bottom-10 left-1/3 hidden h-[300px] w-[300px] bg-lavender/25 md:block" style={{ animationDelay: "-9s" }} />
       <Particles count={desktop ? 22 : 10} />
 
-      <motion.div style={desktop ? { y: fgY, opacity: fade } : undefined} className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pt-28 pb-10 sm:px-6 md:min-h-0 md:justify-start md:pt-44 md:pb-16">
+      <motion.div style={desktop ? { y: fgY, opacity: fade } : {}} className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pt-28 pb-10 sm:px-6 md:min-h-0 md:justify-start md:pt-44 md:pb-16">
         <motion.p initial={{ opacity: 0, letterSpacing: "0.6em" }} animate={{ opacity: 1, letterSpacing: "0.32em" }} transition={{ duration: 1.4, delay: 0.3 }} className="eyebrow text-[0.62rem] text-champagne sm:text-[0.7rem]">Wedding · Corporate · Social · Birthday</motion.p>
         <h1 className="mt-5 text-[2.65rem] leading-[0.98] min-[390px]:text-[2.9rem] min-[430px]:text-[3.2rem] sm:text-7xl md:text-8xl">
           <span className="block">
@@ -164,10 +164,10 @@ function Story({ onPlay }: { onPlay: () => void }) {
           <Link to="/about" className="btn-ghost-dark mt-8">Know Our Story <ArrowRight size={16} /></Link>
         </Reveal>
         <div className="relative h-[400px] sm:h-[520px]">
-          <motion.div style={desktop ? { y: a } : undefined} className="absolute top-4 left-0 w-[50%] -rotate-6">
+          <motion.div style={desktop ? { y: a } : {}} className="absolute top-4 left-0 w-[50%] -rotate-6">
             <img src={images.wedding} alt="" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border-4 border-pearl object-cover shadow-soft" />
           </motion.div>
-          <motion.div style={desktop ? { y: b } : undefined} className="absolute top-0 right-0 w-[46%] rotate-[5deg]">
+          <motion.div style={desktop ? { y: b } : {}} className="absolute top-0 right-0 w-[46%] rotate-[5deg]">
             <img src={images.corporate} alt="" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border-4 border-pearl object-cover shadow-soft" />
           </motion.div>
           <div className="absolute bottom-0 left-[20%] z-10 w-[58%] rotate-1">
