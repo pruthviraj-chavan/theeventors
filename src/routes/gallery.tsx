@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { X } from "lucide-react";
+import { EmptyState, useSwitchLoading } from "@/components/site/Loader";
 import { images, showcase } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
@@ -18,37 +19,44 @@ export const Route = createFileRoute("/gallery")({
   component: Gallery,
 });
 
-const spans = ["md:row-span-2", "", "", "md:col-span-2", "", "md:row-span-2", "", ""];
+const spans = ["row-span-2", "", "", "col-span-2", "", "row-span-2", "", ""];
 
 function Gallery() {
   const tabs = ["All", "Wedding", "Corporate", "Social", "Birthday"];
   const [tab, setTab] = useState("All");
   const [open, setOpen] = useState<(typeof showcase)[number] | null>(null);
+  const loading = useSwitchLoading(tab);
   const items = showcase.filter((s) => tab === "All" || s.cat === tab);
   return (
     <>
       <PageHero eyebrow="Our Gallery" title={<>Moments captured, <span className="text-gold-gradient italic">memories forever</span></>} sub="A glimpse into the celebrations we've been honoured to craft." img={images.social}>
-        <div className="mt-10 flex flex-wrap gap-2">
+        <div role="tablist" className="no-scrollbar -mx-5 mt-10 flex gap-2 overflow-x-auto px-5">
           {tabs.map((t) => (
-            <button key={t} onClick={() => setTab(t)} className={`rounded-full px-4 py-2 text-sm transition-all ${tab === t ? "bg-gold text-midnight" : "border border-pearl/25 text-pearl hover:border-champagne"}`}>{t}</button>
+            <button key={t} onClick={() => setTab(t)} role="tab" aria-selected={tab === t} className={`min-h-11 shrink-0 rounded-full px-5 text-sm transition-all ${tab === t ? "bg-gold text-midnight" : "border border-pearl/25 text-pearl hover:border-champagne"}`}>{t}</button>
           ))}
         </div>
       </PageHero>
-      <section className="bg-ivory py-20">
-        <motion.div layout className="mx-auto grid max-w-7xl auto-rows-[240px] grid-cols-1 gap-4 px-6 sm:grid-cols-2 md:grid-cols-4">
+      <section className="bg-ivory py-14 md:py-20">
+        {loading ? (
+          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 px-5 sm:gap-4 sm:px-6 md:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton aspect-square rounded-2xl" />)}</div>
+        ) : items.length === 0 ? (
+          <EmptyState title="No moments yet" text="We're curating this collection. Check back soon." action={<button onClick={() => setTab("All")} className="btn-ghost-dark">Show all</button>} />
+        ) : (
+        <motion.div layout className="mx-auto grid max-w-7xl auto-rows-[170px] grid-flow-dense grid-cols-2 gap-3 px-5 sm:auto-rows-[220px] sm:gap-4 sm:px-6 md:auto-rows-[240px] md:grid-cols-4">
           <AnimatePresence mode="popLayout">
             {items.map((s, i) => (
-              <motion.button layout key={s.title} onClick={() => setOpen(s)} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.4 }} className={`group relative overflow-hidden rounded-2xl text-left ${tab === "All" ? spans[i] : ""}`}>
+              <motion.button layout key={s.title} onClick={() => setOpen(s)} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94 }} transition={{ duration: 0.4 }} className={`group relative overflow-hidden rounded-2xl text-left ${tab === "All" ? spans[i] : ""}`} aria-label={`Open ${s.title}`}>
                 <img src={s.img} alt={s.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-midnight/80 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                <div className="absolute bottom-0 p-5 text-pearl opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                <div className="absolute inset-0 bg-gradient-to-t from-midnight/80 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-100 md:opacity-0" />
+                <div className="absolute bottom-0 p-3 text-pearl transition-opacity duration-500 group-hover:opacity-100 sm:p-5 md:opacity-0">
                   <span className="eyebrow text-champagne">{s.cat}</span>
-                  <p className="font-display text-2xl">{s.title}</p>
+                  <p className="font-display text-lg leading-tight sm:text-2xl">{s.title}</p>
                 </div>
               </motion.button>
             ))}
           </AnimatePresence>
         </motion.div>
+        )}
       </section>
       <AnimatePresence>
         {open && (

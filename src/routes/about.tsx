@@ -27,8 +27,8 @@ function About() {
   return (
     <>
       <PageHero eyebrow="About Yaadein" title={<>Turning moments into <span className="text-gold-gradient italic">Yaadein</span></>} sub="At Yaadein, we believe events are not just occasions — they are emotions, connections and memories that stay with you forever." img={images.wedding} />
-      <section className="bg-ivory py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-2">
+      <section className="bg-ivory py-16 md:py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-6 md:gap-14 lg:grid-cols-2">
           <Reveal>
             <img src={images.team} alt="Yaadein team styling a banquet" loading="lazy" className="aspect-[4/3] w-full rounded-3xl object-cover shadow-soft" />
           </Reveal>
@@ -44,21 +44,21 @@ function About() {
           </Reveal>
         </div>
       </section>
-      <section className="bg-night grain relative py-24 text-pearl">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="bg-night grain relative py-16 text-pearl md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {pillars.map(({ I, t, d }, i) => (
               <Reveal key={t} delay={i * 0.08}>
-                <div className="glass-dark h-full rounded-2xl p-7">
+                <div className="glass-dark h-full rounded-2xl p-5 md:p-7">
                   <I className="text-champagne" />
-                  <h3 className="mt-5 text-2xl">{t}</h3>
-                  <p className="mt-2 text-sm text-pearl/60">{d}</p>
+                  <h3 className="mt-4 text-xl md:text-2xl">{t}</h3>
+                  <p className="mt-2 text-xs text-pearl/60 md:text-sm">{d}</p>
                 </div>
               </Reveal>
             ))}
           </div>
           <Reveal className="mt-20 text-center">
-            <h2 className="text-4xl md:text-6xl">Every event has a story.<br /><span className="text-gold-gradient italic">Let's craft yours.</span></h2>
+            <h2 className="text-[2.3rem] leading-tight sm:text-5xl md:text-6xl">Every event has a story.<br /><span className="text-gold-gradient italic">Let's craft yours.</span></h2>
             <Link to="/contact" className="btn-gold mt-8">Plan Your Event <ArrowRight size={16} /></Link>
           </Reveal>
         </div>
