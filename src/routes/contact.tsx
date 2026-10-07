@@ -12,6 +12,8 @@ export const Route = createFileRoute("/contact")({
   validateSearch: (s: Record<string, unknown>): { type?: string } => (typeof s['type'] === "string" ? { type: s['type'] as string } : {}),
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Contact Yaadein — Let's Create Your Next Yaad" },
       { name: "description", content: "Enquire about your wedding, corporate, social or birthday event. Free consultation, quick response within 24 hours." },
       { property: "og:title", content: "Contact Yaadein" },

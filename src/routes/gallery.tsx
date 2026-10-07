@@ -11,6 +11,8 @@ import { FilmGallery } from "@/components/site/FilmGallery";
 export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Gallery — Moments Captured, Memories Forever | Yaadein" },
       { name: "description", content: "Browse weddings, corporate galas, social evenings and birthday celebrations crafted by Yaadein." },
       { property: "og:title", content: "Yaadein Gallery" },

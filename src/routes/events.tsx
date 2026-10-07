@@ -10,6 +10,8 @@ import { videoLibrary } from "@/lib/media";
 export const Route = createFileRoute("/events")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Our Events — Weddings, Corporate, Social & Birthdays | Yaadein" },
       { name: "description", content: "Explore Yaadein's wedding, corporate, social and birthday experiences — different occasions, same emotion." },
       { property: "og:title", content: "Our Events | Yaadein" },
