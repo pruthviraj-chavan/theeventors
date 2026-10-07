@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { playbackSource, type EventFilm } from "@/lib/media";
+import { cn } from "@/lib/utils";
 
 /** Loads only nearby footage, chooses one rendition, and pauses offscreen. */
 export function EventVideo({ film, priority = false, className = "", controls = true }: { film: EventFilm; priority?: boolean; className?: string; controls?: boolean }) {
@@ -34,7 +35,7 @@ export function EventVideo({ film, priority = false, className = "", controls = 
     else { manual.current = true; setSrc(playbackSource(film, video, window.matchMedia("(max-width: 767px)").matches)); void video.play().catch(() => setPlaying(false)); }
   };
   return (
-    <div className={`relative overflow-hidden bg-midnight ${className}`}>
+    <div className={cn("relative overflow-hidden bg-midnight", className)}>
       <img src={film.thumb} alt="" loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} className="absolute inset-0 h-full w-full object-cover" />
       <video ref={ref} src={failed ? undefined : src} poster={film.thumb} muted loop playsInline autoPlay={Boolean(src)} preload={priority ? "auto" : "none"} onLoadedData={() => setReady(true)} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => { setFailed(true); setPlaying(false); }} aria-label={film.title} className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${ready && !failed ? "opacity-100" : "opacity-0"}`} />
       {controls && !failed && <Button variant="ghost" size="icon" onClick={toggle} title={playing ? "Pause background video" : "Play background video"} aria-label={playing ? "Pause background video" : "Play background video"} className="absolute right-3 bottom-3 z-20 h-11 w-11 rounded-full border border-pearl/30 bg-midnight/70 text-pearl hover:bg-midnight">{playing ? <Pause /> : <Play />}</Button>}
