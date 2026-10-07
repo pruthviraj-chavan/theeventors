@@ -84,8 +84,8 @@ function Contact() {
               { I: MapPin, l: "Visit us", v: CONTACT.city },
             ].map(({ I, l, v, h }) => (
               <li key={l} className="flex items-center gap-4">
-                <span className="bg-gold grid h-12 w-12 place-items-center rounded-full text-midnight"><I size={18} /></span>
-                <div><p className="text-xs text-pearl/50">{l}</p>{h ? <a href={h} className="text-lg hover:text-champagne">{v}</a> : <p className="text-lg">{v}</p>}</div>
+                <span className="bg-gold grid h-12 w-12 shrink-0 place-items-center rounded-full text-midnight"><I size={18} /></span>
+                <div className="min-w-0"><p className="text-xs text-pearl/50">{l}</p>{h ? <a href={h} className="break-words text-lg hover:text-champagne">{v}</a> : <p className="text-lg leading-relaxed">{v}</p>}</div>
               </li>
             ))}
           </ul>

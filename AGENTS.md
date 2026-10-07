@@ -17,3 +17,7 @@
 ## Brand assets
 - Use the shared navigation Logo for website branding and derive the favicon from the same supplied PNG; use a light-lettering rendition on dark surfaces for legibility.
 - Keep the owner phone in CONTACT and generate enquiry destinations through whatsappLink so all contact actions stay consistent.
+- Keep the owner address in CONTACT so contact and footer always display the same approved location.
+
+## Section motion
+- Use the shared useAutoScroll hook for continuous preview rows; pause offscreen, on interaction and for reduced motion to preserve usability and performance.

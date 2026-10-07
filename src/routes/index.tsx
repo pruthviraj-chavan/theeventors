@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Play, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Play, Pause, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { categories, films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
 import { EventVideo } from "@/components/site/EventVideo";
 import { FilmModal, FilmTile } from "@/components/site/FilmGallery";
@@ -10,6 +10,8 @@ import { Counter, Particles, Reveal } from "@/components/site/Reveal";
 import { SectionHead } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
 import { CardSkeleton, EmptyState, useIsDesktop, useSwitchLoading } from "@/components/site/Loader";
+import { useAutoScroll } from "@/components/site/useAutoScroll";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,7 +19,7 @@ export const Route = createFileRoute("/")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { title: "The Eventors — We manage बेहतर" },
-      { name: "description", content: "Luxury wedding, corporate, social and birthday experiences in Pune and across India. Celebrations turned into memories." },
+      { name: "description", content: "Luxury wedding, corporate, social and birthday experiences in Kolkata and across India. Celebrations turned into memories." },
       { property: "og:title", content: "The Eventors — Events & Experiences" },
       { property: "og:description", content: "We manage बेहतर. Wedding, corporate, social and birthday experiences." },
     ],
@@ -275,30 +277,32 @@ function Showcase() {
   const tabs = ["All", "Wedding", "Corporate", "Social", "Birthday"];
   const [tab, setTab] = useState("All");
   const loading = useSwitchLoading(tab);
-  const row = useRef<HTMLDivElement>(null);
   const items = showcase.filter((s) => tab === "All" || s.cat === tab);
+  const { row, paused, setPaused, reducedMotion } = useAutoScroll(tab, !loading && items.length > 1);
+  const displayItems = items.length > 1 ? [...items, ...items, ...items, ...items] : items;
   const scroll = (dir: number) => row.current?.scrollBy({ left: dir * (row.current.clientWidth * 0.8), behavior: "smooth" });
   return (
     <section className="overflow-hidden bg-[linear-gradient(180deg,var(--midnight),var(--ivory)_22%)] pt-24 pb-24 md:pt-36">
       <div className="mx-auto max-w-7xl px-5 sm:px-6">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <Reveal><SectionHead eyebrow="Showcase" title={<>Moments we've turned into <span className="text-accent-gradient italic">memories</span></>} /></Reveal>
-          <div className="hidden gap-2 md:flex">
-            <button onClick={() => scroll(-1)} aria-label="Previous" className="grid h-12 w-12 place-items-center rounded-full border border-border bg-pearl transition hover:border-gold"><ChevronLeft size={18} /></button>
-            <button onClick={() => scroll(1)} aria-label="Next" className="grid h-12 w-12 place-items-center rounded-full border border-border bg-pearl transition hover:border-gold"><ChevronRight size={18} /></button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" onClick={() => { setPaused(true); scroll(-1); }} aria-label="Previous showcase events" title="Previous events" className="h-12 w-12 rounded-full border-border bg-pearl hover:border-gold hover:bg-pearl hover:text-foreground"><ChevronLeft size={18} /></Button>
+            {!reducedMotion && items.length > 1 && <Button variant="outline" size="icon" onClick={() => setPaused(!paused)} aria-label={paused ? "Resume showcase scrolling" : "Pause showcase scrolling"} title={paused ? "Resume scrolling" : "Pause scrolling"} className="h-12 w-12 rounded-full border-border bg-pearl hover:border-gold hover:bg-pearl hover:text-foreground">{paused ? <Play size={18} /> : <Pause size={18} />}</Button>}
+            <Button variant="outline" size="icon" onClick={() => { setPaused(true); scroll(1); }} aria-label="Next showcase events" title="Next events" className="h-12 w-12 rounded-full border-border bg-pearl hover:border-gold hover:bg-pearl hover:text-foreground"><ChevronRight size={18} /></Button>
           </div>
         </div>
         <div role="tablist" aria-label="Filter events" className="no-scrollbar -mx-5 mt-8 flex gap-2 overflow-x-auto px-5">
           {tabs.map((t) => (
-            <button role="tab" aria-selected={tab === t} key={t} onClick={() => setTab(t)} className={`min-h-11 shrink-0 rounded-full px-5 text-sm transition-all ${tab === t ? "bg-gold text-midnight shadow-gold" : "border border-border bg-pearl/60 hover:border-gold"}`}>{t}</button>
+            <Button variant="outline" role="tab" aria-selected={tab === t} key={t} onClick={() => setTab(t)} className={`min-h-11 shrink-0 rounded-full px-5 text-sm transition-all hover:bg-pearl hover:text-foreground ${tab === t ? "bg-gold text-midnight shadow-gold" : "border border-border bg-pearl/60 hover:border-gold"}`}>{t}</Button>
           ))}
         </div>
       </div>
-      <div ref={row} className="swipe-row mt-8 scroll-px-5 px-5 pb-2 md:scroll-px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] md:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]">
+      <div ref={row} aria-label="Event showcase" className="swipe-row auto-scroll-row relative mt-8 scroll-px-5 px-5 pb-2 md:scroll-px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] md:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => <div key={i} className="w-[80%] sm:w-[360px]"><CardSkeleton /></div>)
-          : items.map((s, i) => (
-              <motion.article key={s.title} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: i * 0.05 }} className="group relative w-[80%] overflow-hidden rounded-2xl sm:w-[360px]">
+          : displayItems.map((s, i) => (
+              <motion.article key={`${s.title}-${i}`} data-scroll-item data-scroll-copy={i === items.length ? "true" : undefined} aria-hidden={i >= items.length ? true : undefined} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: (i % items.length) * 0.05 }} className="group relative w-[80%] overflow-hidden rounded-2xl sm:w-[360px]">
                 <img src={s.img} alt={s.title} loading="lazy" className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/15 to-transparent" />
                 <span className="glass-dark eyebrow absolute top-4 left-4 rounded-full px-3 py-1.5 text-[0.6rem] text-champagne">{s.cat}</span>

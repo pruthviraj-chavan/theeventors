@@ -10,3 +10,6 @@
 - [x] Verify playback and mobile layouts; deliver media replacement documentation
 
 - [x] Rename company, install transparent supplied logo and slogan, and verify owner WhatsApp actions
+- [x] Update the owner address to Golden Residency, Baguihati, Kolkata
+- [x] Add automatic showcase scrolling and gentle section interactions
+- [ ] Refine Client Stories with animation, colour and a background photograph

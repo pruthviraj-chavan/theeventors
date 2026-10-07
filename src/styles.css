@@ -236,3 +236,19 @@ html, body { overflow-x: clip; }
 }
 @utility section-fade-dark { background: linear-gradient(180deg, var(--ivory), var(--midnight)); }
 @utility section-fade-light { background: linear-gradient(180deg, var(--midnight), var(--ivory)); }
+
+/* Motion stays inside sections; the page never scrolls itself. */
+.auto-scroll-row { scroll-snap-type: none; scroll-behavior: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal { opacity: 1 !important; transform: none !important; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  section h2 { transition: translate 650ms ease; }
+  section:hover h2 { translate: 0 -3px; }
+  section img { transition: scale 1000ms ease, filter 800ms ease; }
+  section img:hover { scale: 1.025; filter: saturate(1.12); }
+  section ol li { transition: translate 450ms ease; }
+  section ol li:hover { translate: 0 -5px; }
+  section figure { transition: translate 500ms ease, border-color 500ms ease, box-shadow 500ms ease; }
+  section figure:hover { translate: 0 -5px; border-color: var(--gold); box-shadow: var(--shadow-gold); }
+}
