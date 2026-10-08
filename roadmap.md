@@ -13,3 +13,7 @@
 - [x] Update the owner address to Golden Residency, Baguihati, Kolkata
 - [x] Add automatic showcase scrolling and gentle section interactions
 - [ ] Refine Client Stories with animation, colour and a background photograph
+- [ ] Import real photos and videos from the repository’s realphotos collection
+- [ ] Redesign Gallery with premium animated real-photo cards and floating hover movement
+- [ ] Move Wedding, Corporate, Social and Birthday cards below the homepage hero
+- [ ] Add the named PDF event guides to Events with polished animated previews
