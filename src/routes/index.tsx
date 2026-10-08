@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, AnimatePresence, useScroll, useTransform, useInView, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, Play, Pause, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { categories, films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
@@ -36,6 +36,7 @@ function Home() {
   return (
     <>
       <Hero onPlay={() => setFilm(films[0] ?? null)} />
+      <EventCategories />
       <Stats />
       <Story onPlay={() => setFilm(films[0] ?? null)} />
       <Why />
@@ -96,29 +97,33 @@ function Hero({ onPlay }: { onPlay: () => void }) {
         </motion.div>
       </motion.div>
 
-      {/* floating category cards — swipe on mobile, grid on desktop */}
-      <div className="relative mx-auto max-w-7xl pb-14 md:px-6 md:pb-20">
+    </section>
+  );
+}
+
+function EventCategories() {
+  const desktop = useIsDesktop();
+  return (
+    <section aria-label="Event categories" className="relative overflow-hidden bg-midnight pb-16 md:pb-24">
+      <div className="mx-auto max-w-7xl md:px-6">
         <div className="swipe-row scroll-px-5 px-5 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0">
           {categories.map((c, i) => {
             const I = catIcons[c.name];
             return (
-              <motion.div key={c.name} className="w-[68%] min-[430px]:w-[60%] md:w-auto" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 2 + i * 0.1, ease }}>
+              <Reveal key={c.name} delay={i * 0.08} className="w-[72%] min-[430px]:w-[62%] md:w-auto">
                 <div className={desktop ? "animate-float" : ""} style={{ animationDelay: `${i * -1.5}s` }}>
-                  <Link to="/events" hash={c.name.toLowerCase()} className="group glass-light block overflow-hidden rounded-2xl p-2 text-foreground shadow-soft transition-transform duration-500 md:hover:-translate-y-2">
-                    <div className="relative overflow-hidden rounded-xl">
+                  <Link to="/events" hash={c.name.toLowerCase()} className="group glass-light block overflow-hidden rounded-lg p-2 text-foreground shadow-soft transition-transform duration-500 md:hover:-translate-y-2">
+                    <div className="relative overflow-hidden rounded-md">
                       <img src={c.img} alt={`${c.name} event`} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                      <span className="bg-gold absolute -bottom-4 left-3 grid h-10 w-10 place-items-center rounded-xl text-midnight shadow-gold"><I size={18} /></span>
+                      <span className="bg-gold absolute -bottom-4 left-3 grid h-10 w-10 place-items-center rounded-md text-midnight shadow-gold"><I size={18} /></span>
                     </div>
                     <div className="flex items-end justify-between gap-2 px-2 pt-6 pb-2">
-                      <div className="min-w-0">
-                        <h3 className="text-2xl">{c.name}</h3>
-                        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.desc}</p>
-                      </div>
+                      <div className="min-w-0"><h3 className="text-2xl">{c.name}</h3><p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.desc}</p></div>
                       <ArrowUpRight size={18} className="shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                     </div>
                   </Link>
                 </div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>
@@ -355,7 +360,6 @@ function FilmCard({ f, big, onOpen }: { f: Film; big?: boolean; onOpen: (f: Film
 function Testimonials() {
   const section = useRef<HTMLElement>(null);
   const visible = useInView(section, { amount: 0.15 });
-  const reducedMotion = useReducedMotion();
   const [paused, setPaused] = useState(false);
   return (
     <section ref={section} className="client-stories group/stories relative overflow-hidden bg-midnight py-20 text-pearl md:py-28" data-paused={paused || !visible ? "true" : "false"}>
