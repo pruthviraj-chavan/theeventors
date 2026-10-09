@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { Images, X } from "lucide-react";
 import { EmptyState, useSwitchLoading } from "@/components/site/Loader";
 import { images, showcase } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
 import { FilmGallery } from "@/components/site/FilmGallery";
+import { realFilms, realPhotos } from "@/lib/realMedia";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -40,6 +41,25 @@ function Gallery() {
         </div>
       </PageHero>
       <FilmGallery variant="gallery" />
+      <section className="overflow-hidden bg-ivory py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+          <div className="mb-10 grid items-end gap-5 md:grid-cols-[1fr_auto]">
+            <div><p className="eyebrow text-gold">Real celebrations</p><h2 className="mt-3 max-w-3xl text-4xl leading-tight sm:text-5xl md:text-6xl">Crafted in detail. <span className="italic text-gold">Lived in full.</span></h2></div>
+            <p className="max-w-sm text-sm text-muted-foreground">A genuine look at spaces, stages, entrances and live performances created by The Eventors.</p>
+          </div>
+          <div className="columns-2 gap-3 md:columns-3 md:gap-5 lg:columns-4">
+            {realPhotos.map((photo, index) => (
+              <motion.button key={photo.id} onClick={() => setOpen({ title: photo.title, cat: photo.cat, loc: "Kolkata", date: "The Eventors", img: photo.img } as (typeof showcase)[number])} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.55, delay: (index % 4) * 0.06 }} className="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-lg text-left shadow-soft md:mb-5">
+                <img src={photo.img} alt={photo.title} loading="lazy" className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${index % 5 === 0 ? "aspect-[4/5]" : index % 3 === 0 ? "aspect-square" : "aspect-[3/4]"}`} />
+                <span className="absolute inset-0 bg-gradient-to-t from-midnight/90 via-transparent to-transparent opacity-80 transition-opacity group-hover:opacity-100" />
+                <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border border-pearl/40 bg-midnight/35 text-pearl backdrop-blur"><Images size={15} /></span>
+                <span className="absolute inset-x-0 bottom-0 p-3 text-pearl sm:p-4"><span className="eyebrow text-champagne">{photo.cat}</span><span className="mt-1 block font-display text-lg leading-tight sm:text-xl">{photo.title}</span></span>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </section>
+      <FilmGallery variant="gallery" films={realFilms} eyebrow="Real Event Films" title="The celebrations, as they happened" />
       <section className="bg-ivory py-14 md:py-20">
         {loading ? (
           <div className="mx-auto grid max-w-7xl grid-cols-2 gap-3 px-5 sm:gap-4 sm:px-6 md:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton aspect-square rounded-2xl" />)}</div>
