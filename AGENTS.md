@@ -11,6 +11,7 @@
 
 ## Media architecture
 - Keep all film metadata and placement mappings in `src/lib/media.ts`; CDN pointer imports prevent large runtime media from entering the source bundle.
+- Keep imported real-event photography, guide metadata and supplementary film metadata in `src/lib/realMedia.ts` so the curated real collection remains distinct from shared film placement.
 - Use `EventVideo` for silent previews and `FilmModal` for full playback; shared loading and accessibility behavior must stay consistent across pages.
 - Store desktop/mobile MP4 and WebM renditions plus JPEG poster pointers under `src/assets/videos`; optimize offline with no audio and select a browser-supported format before playback.
 

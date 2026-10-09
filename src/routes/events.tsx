@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, BookOpen, Check, Download } from "lucide-react";
 import { categories, images, whatsappLink } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { FinalCta } from "@/components/site/FinalCta";
 import { FilmGallery } from "@/components/site/FilmGallery";
 import { videoLibrary } from "@/lib/media";
+import { eventGuides } from "@/lib/realMedia";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
@@ -53,6 +54,25 @@ function Events() {
               </Reveal>
             </div>
           ))}
+        </div>
+      </section>
+      <section className="overflow-hidden bg-midnight py-16 text-pearl md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+          <Reveal className="mb-10 max-w-3xl"><p className="eyebrow text-gold">Event inspiration library</p><h2 className="mt-3 text-4xl leading-tight sm:text-5xl md:text-6xl">Explore our <span className="italic text-gold">experience guides</span></h2><p className="mt-5 max-w-2xl text-sm leading-relaxed text-pearl/65 sm:text-base">Open the original The Eventors lookbooks for décor, pool events, cocktails and menu inspiration.</p></Reveal>
+          <div className="swipe-row pb-4 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible">
+            {eventGuides.map((guide, index) => (
+              <Reveal key={guide.title} delay={index * 0.08} className="w-[82%] min-[430px]:w-[72%] md:w-auto">
+                <article className="group overflow-hidden rounded-lg border border-pearl/15 bg-navy">
+                  <a href={guide.href} target="_blank" rel="noreferrer" className="relative block overflow-hidden" aria-label={`Open ${guide.title}`}>
+                    <img src={guide.cover} alt={`${guide.title} cover`} loading="lazy" className="aspect-[4/5] w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+                    <span className="absolute inset-0 bg-gradient-to-t from-midnight/90 via-transparent to-transparent" />
+                    <span className="absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full border border-pearl/35 bg-midnight/45 text-pearl backdrop-blur transition-transform group-hover:-translate-y-1"><BookOpen size={18} /></span>
+                  </a>
+                  <div className="p-5"><p className="eyebrow text-champagne">{guide.eyebrow}</p><h3 className="mt-2 text-2xl">{guide.title}</h3><p className="mt-3 min-h-16 text-sm leading-relaxed text-pearl/60">{guide.description}</p><a href={guide.href} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm text-champagne transition-colors hover:text-gold">View PDF <Download size={15} /></a></div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
       <FilmGallery variant="events" films={[videoLibrary.entrance, videoLibrary.courtyard, videoLibrary.dandiya, videoLibrary.estate]} />
