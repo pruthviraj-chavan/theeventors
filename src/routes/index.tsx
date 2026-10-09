@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Play, Pause, Heart, Briefcase, PartyPopper, Cake, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { categories, films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
+import { ArrowRight, Play, Pause, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
 import { EventVideo } from "@/components/site/EventVideo";
 import { FilmModal, FilmTile } from "@/components/site/FilmGallery";
 import { heroFilm } from "@/lib/media";
@@ -27,7 +27,6 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const catIcons = { Wedding: Heart, Corporate: Briefcase, Social: PartyPopper, Birthday: Cake };
 const ease = [0.2, 0.7, 0.2, 1] as const;
 type Film = (typeof films)[number];
 
@@ -36,7 +35,6 @@ function Home() {
   return (
     <>
       <Hero onPlay={() => setFilm(films[0] ?? null)} />
-      <EventCategories />
       <Stats />
       <Story onPlay={() => setFilm(films[0] ?? null)} />
       <Why />
@@ -56,78 +54,40 @@ function Hero({ onPlay }: { onPlay: () => void }) {
   const desktop = useIsDesktop();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
-  const fgY = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const words = ["The"];
   return (
     <section ref={ref} className="grain relative overflow-hidden bg-midnight text-pearl">
-      {/* layer 1: background photo / film */}
+      {/* layer 1: background film */}
       <motion.div style={desktop ? { y: bgY } : {}} className="absolute inset-0 h-[118%]">
         <EventVideo film={heroFilm} priority className="absolute inset-0 h-full w-full" />
       </motion.div>
-      {/* layer 2: cinematic overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/30 to-midnight md:bg-gradient-to-r md:from-midnight/95 md:via-midnight/55 md:to-midnight/10" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-midnight via-midnight/80 to-transparent" />
+      {/* layer 2: cinematic overlay, evenly dark so centred type stays readable */}
+      <div className="pointer-events-none absolute inset-0 bg-midnight/60" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,oklch(0.17_0.03_255/0.9)_100%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-midnight via-midnight/70 to-transparent" />
       {/* layer 3: moving light leaks */}
-      <div className="light-leak -top-24 -left-24 h-[420px] w-[420px] bg-magenta/35" />
-      <div className="light-leak top-1/3 right-[-10%] h-[380px] w-[380px] bg-gold/35" style={{ animationDelay: "-5s" }} />
-      <div className="light-leak bottom-10 left-1/3 hidden h-[300px] w-[300px] bg-lavender/25 md:block" style={{ animationDelay: "-9s" }} />
+      <div className="light-leak -top-24 left-[8%] h-[420px] w-[420px] bg-magenta/30" />
+      <div className="light-leak top-[16%] right-[6%] h-[380px] w-[380px] bg-gold/30" style={{ animationDelay: "-5s" }} />
+      <div className="light-leak bottom-16 left-[38%] hidden h-[300px] w-[300px] bg-lavender/20 md:block" style={{ animationDelay: "-9s" }} />
       <Particles count={desktop ? 22 : 10} />
 
-      <motion.div style={desktop ? { y: fgY, opacity: fade } : {}} className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pt-28 pb-10 sm:px-6 md:min-h-0 md:justify-start md:pt-44 md:pb-16">
-        <motion.p initial={{ opacity: 0, letterSpacing: "0.6em" }} animate={{ opacity: 1, letterSpacing: "0.32em" }} transition={{ duration: 1.4, delay: 0.3 }} className="eyebrow text-[0.62rem] text-champagne sm:text-[0.7rem]">Wedding · Corporate · Social · Birthday</motion.p>
-        <h1 className="mt-5 text-[2.65rem] leading-[0.98] min-[390px]:text-[2.9rem] min-[430px]:text-[3.2rem] sm:text-7xl md:text-8xl">
-          <span className="block">
-            {words.map((w, i) => (
-              <span key={w} className="inline-block overflow-hidden pr-[0.22em] align-bottom">
-                <motion.span className="inline-block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.5 + i * 0.08, ease }}>{w}</motion.span>
-              </span>
-            ))}
+      <motion.div style={desktop ? { opacity: fade } : {}} className="relative mx-auto flex min-h-[100svh] max-w-4xl flex-col items-center justify-center px-5 pt-28 pb-28 text-center sm:px-6 md:pb-24">
+        <motion.p initial={{ opacity: 0, letterSpacing: "0.6em" }} animate={{ opacity: 1, letterSpacing: "0.32em" }} transition={{ duration: 1.4, delay: 0.3 }} className="eyebrow text-[0.6rem] text-champagne sm:text-[0.7rem]">Wedding · Corporate · Social · Birthday</motion.p>
+        <h1 className="font-hero mt-6 leading-[0.9] tracking-[-0.01em]">
+          <span className="block overflow-hidden pb-[0.1em]">
+            <motion.span className="text-champagne inline-block text-[2.1rem] italic sm:text-5xl" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.5, ease }}>The</motion.span>
           </span>
-          <span className="block overflow-hidden pb-[0.12em]">
-            <motion.span className="inline-block" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.9, ease }}>Eventors</motion.span>{" "}
-            <motion.span className="text-gold-gradient inline-block pr-2 italic" initial={{ opacity: 0, filter: "blur(14px)", scale: 1.08 }} animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }} transition={{ duration: 1.4, delay: 1.1, ease }}></motion.span>
+          <span className="block overflow-hidden pb-[0.14em]">
+            <motion.span className="text-gold-gradient inline-block text-[3.3rem] sm:text-[6rem] md:text-[7.4rem]" initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 1.1, delay: 0.75, ease }}>Eventors</motion.span>
           </span>
         </h1>
-        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }} className="font-hindi text-xl text-champagne sm:text-3xl">We manage बेहतर</motion.p>
-        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.65, duration: 0.8 }} className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-pearl/75">From intimate celebrations to grand occasions, we create experiences that stay in hearts forever.</motion.p>
-        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.8 }} className="mt-8 grid grid-cols-1 gap-3 min-[430px]:grid-cols-[auto_auto] min-[430px]:justify-start sm:flex">
+        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5, duration: 0.8 }} className="font-hindi mt-4 text-2xl text-champagne sm:text-4xl">We manage बेहतर</motion.p>
+        <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.65, duration: 0.8 }} className="mt-5 max-w-xl text-[0.95rem] leading-relaxed text-pearl/80 sm:text-lg">From intimate celebrations to grand occasions, we create experiences that stay in hearts forever.</motion.p>
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.8, duration: 0.8 }} className="mt-9 flex w-full flex-col gap-3 min-[430px]:w-auto min-[430px]:flex-row min-[430px]:justify-center">
           <Link to="/events" className="btn-gold shine justify-center">Explore Our Events <ArrowRight size={16} /></Link>
           <button onClick={onPlay} className="btn-ghost-light justify-center"><span className="relative grid h-7 w-7 place-items-center rounded-full bg-pearl text-midnight"><span className="absolute inset-0 animate-ping rounded-full bg-pearl/40" /><Play size={11} fill="currentColor" /></span>Our Story</button>
         </motion.div>
       </motion.div>
-
-    </section>
-  );
-}
-
-function EventCategories() {
-  const desktop = useIsDesktop();
-  return (
-    <section aria-label="Event categories" className="relative overflow-hidden bg-midnight pb-16 md:pb-24">
-      <div className="mx-auto max-w-7xl md:px-6">
-        <div className="swipe-row scroll-px-5 px-5 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0">
-          {categories.map((c, i) => {
-            const I = catIcons[c.name];
-            return (
-              <Reveal key={c.name} delay={i * 0.08} className="w-[72%] min-[430px]:w-[62%] md:w-auto">
-                <div className={desktop ? "animate-float" : ""} style={{ animationDelay: `${i * -1.5}s` }}>
-                  <Link to="/events" hash={c.name.toLowerCase()} className="group glass-light block overflow-hidden rounded-lg p-2 text-foreground shadow-soft transition-transform duration-500 md:hover:-translate-y-2">
-                    <div className="relative overflow-hidden rounded-md">
-                      <img src={c.img} alt={`${c.name} event`} loading="lazy" className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                      <span className="bg-gold absolute -bottom-4 left-3 grid h-10 w-10 place-items-center rounded-md text-midnight shadow-gold"><I size={18} /></span>
-                    </div>
-                    <div className="flex items-end justify-between gap-2 px-2 pt-6 pb-2">
-                      <div className="min-w-0"><h3 className="text-2xl">{c.name}</h3><p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{c.desc}</p></div>
-                      <ArrowUpRight size={18} className="shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-                    </div>
-                  </Link>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
-      </div>
     </section>
   );
 }
