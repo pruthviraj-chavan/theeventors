@@ -17,3 +17,4 @@
 - [x] Redesign Gallery with premium animated real-photo cards and floating hover movement
 - [x] Remove the Wedding, Corporate, Social and Birthday cards from the homepage entirely; centre the hero copy in a display serif
 - [x] Add the named PDF event guides to Events with polished animated previews
+- [ ] Fix Vercel photo/video loading by resolving CDN media links to the canonical host and verify loading performance

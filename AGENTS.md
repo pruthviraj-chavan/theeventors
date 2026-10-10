@@ -14,6 +14,7 @@
 - Keep imported real-event photography, guide metadata and supplementary film metadata in `src/lib/realMedia.ts` so the curated real collection remains distinct from shared film placement.
 - Use `EventVideo` for silent previews and `FilmModal` for full playback; shared loading and accessibility behavior must stay consistent across pages.
 - Store desktop/mobile MP4 and WebM renditions plus JPEG poster pointers under `src/assets/videos`; optimize offline with no audio and select a browser-supported format before playback.
+- Resolve Lovable CDN media paths against the canonical published site origin so external hosting deployments can retrieve media independently of their app hostname.
 
 ## Brand assets
 - Use the shared navigation Logo for website branding and derive the favicon from the same supplied PNG; use a light-lettering rendition on dark surfaces for legibility.
