@@ -15,5 +15,5 @@
 - [x] Refine Client Stories with animation, colour and a background photograph
 - [x] Import real photos and videos from the repository’s realphotos collection
 - [x] Redesign Gallery with premium animated real-photo cards and floating hover movement
-- [x] Move Wedding, Corporate, Social and Birthday cards below the homepage hero
+- [x] Remove the Wedding, Corporate, Social and Birthday cards from the homepage entirely; centre the hero copy in a display serif
 - [x] Add the named PDF event guides to Events with polished animated previews
