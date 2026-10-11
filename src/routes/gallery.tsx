@@ -51,7 +51,7 @@ function Gallery() {
           <div className="columns-2 gap-3 md:columns-3 md:gap-5 lg:columns-4">
             {realPhotos.map((photo, index) => (
               <motion.button key={photo.id} onClick={() => setOpen({ title: photo.title, cat: photo.cat, loc: "Kolkata", date: "The Eventors", img: photo.img })} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.55, delay: (index % 4) * 0.06 }} className="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-lg text-left shadow-soft md:mb-5">
-                <img src={photo.img} alt={photo.title} loading="lazy" className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${index % 5 === 0 ? "aspect-[4/5]" : index % 3 === 0 ? "aspect-square" : "aspect-[3/4]"}`} />
+                <img src={photo.img} alt={photo.title} loading="lazy" decoding="async" className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${index % 5 === 0 ? "aspect-[4/5]" : index % 3 === 0 ? "aspect-square" : "aspect-[3/4]"}`} />
                 <span className="absolute inset-0 bg-gradient-to-t from-midnight/90 via-transparent to-transparent opacity-80 transition-opacity group-hover:opacity-100" />
                 <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border border-pearl/40 bg-midnight/35 text-pearl backdrop-blur"><Images size={15} /></span>
                 <span className="absolute inset-x-0 bottom-0 p-3 text-pearl sm:p-4"><span className="eyebrow text-champagne">{photo.cat}</span><span className="mt-1 block font-display text-lg leading-tight sm:text-xl">{photo.title}</span></span>

@@ -29,6 +29,8 @@ Sizes below are decimal MB; the reduction compares original footage with desktop
 
 ## 3. Where media and code live
 
+All CDN media URLs used in app code must be resolved through `mediaAssetUrl()` from `src/lib/assets.ts`. Asset pointer `.url` values are relative to Lovable's published host; using them directly makes them resolve against the active site host and fail on external deployments such as Vercel.
+
 | Location | Purpose |
 |---|---|
 | `src/assets/` | Existing bundled photos: hero.jpg, wedding.jpg, corporate.jpg, social.jpg, birthday.jpg, sangeet.jpg, lanterns.jpg, team.jpg |
