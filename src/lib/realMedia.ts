@@ -1,4 +1,5 @@
 import type { EventFilm } from "./media";
+import { mediaAssetUrl } from "./assets";
 
 import photo01 from "@/assets/real/photos/event-01.webp.asset.json";
 import photo02 from "@/assets/real/photos/event-02.webp.asset.json";
@@ -54,18 +55,18 @@ export const realPhotos = photos.map((asset, index) => ({
   id: `real-${index + 1}`,
   title: titles[index] ?? `The Eventors Moment ${index + 1}`,
   cat: index < 13 ? "Decor" : index < 18 ? "Wedding" : index < 26 ? "Corporate" : "Live Experiences",
-  img: asset.url,
+  img: mediaAssetUrl(asset.url),
 }));
 
 export const realFilms: EventFilm[] = [
-  { id: "real-film-01", title: "Inside the Celebration", cat: "Real Event", duration: "0:42", src: real01Mp4.url, mobile: real01Mp4.url, webm: real01Webm.url, mobileWebm: real01Webm.url, thumb: real01Poster.url, original: "WhatsApp Video 2026-10-07 at 11.18.39.mp4" },
-  { id: "real-film-02", title: "Details in Motion", cat: "Real Event", duration: "0:30", src: real02Mp4.url, mobile: real02Mp4.url, webm: real02Webm.url, mobileWebm: real02Webm.url, thumb: real02Poster.url, original: "WhatsApp Video 2026-10-07 at 11.18.42.mp4" },
-  { id: "real-film-03", title: "The Eventors Experience", cat: "Real Event", duration: "1:17", src: real03Mp4.url, mobile: real03Mp4.url, webm: real03Webm.url, mobileWebm: real03Webm.url, thumb: real03Poster.url, original: "WhatsApp Video 2026-10-07 at 11.20.21.mp4" },
+  { id: "real-film-01", title: "Inside the Celebration", cat: "Real Event", duration: "0:42", src: mediaAssetUrl(real01Mp4.url), mobile: mediaAssetUrl(real01Mp4.url), webm: mediaAssetUrl(real01Webm.url), mobileWebm: mediaAssetUrl(real01Webm.url), thumb: mediaAssetUrl(real01Poster.url), original: "WhatsApp Video 2026-10-07 at 11.18.39.mp4" },
+  { id: "real-film-02", title: "Details in Motion", cat: "Real Event", duration: "0:30", src: mediaAssetUrl(real02Mp4.url), mobile: mediaAssetUrl(real02Mp4.url), webm: mediaAssetUrl(real02Webm.url), mobileWebm: mediaAssetUrl(real02Webm.url), thumb: mediaAssetUrl(real02Poster.url), original: "WhatsApp Video 2026-10-07 at 11.18.42.mp4" },
+  { id: "real-film-03", title: "The Eventors Experience", cat: "Real Event", duration: "1:17", src: mediaAssetUrl(real03Mp4.url), mobile: mediaAssetUrl(real03Mp4.url), webm: mediaAssetUrl(real03Webm.url), mobileWebm: mediaAssetUrl(real03Webm.url), thumb: mediaAssetUrl(real03Poster.url), original: "WhatsApp Video 2026-10-07 at 11.20.21.mp4" },
 ];
 
 export const eventGuides = [
-  { title: "Décor Lookbook", eyebrow: "21-page collection", description: "Stages, entrances, mandaps, floral installations and atmospheric décor concepts.", cover: decorCover.url, href: decorPdf.url },
-  { title: "Pool Events", eyebrow: "15-page experience guide", description: "Poolside styling, entertainment, lighting, personalised details and celebration ideas.", cover: poolEventsCover.url, href: poolEventsPdf.url },
-  { title: "Pool Cocktails", eyebrow: "17-page inspiration book", description: "Colourful drinks, tropical presentation and poolside bar styling inspiration.", cover: cocktailsCover.url, href: cocktailsPdf.url },
-  { title: "Pool Bar Menu", eyebrow: "5-page menu guide", description: "A curated pool-party beverage and cocktail menu presentation.", cover: poolBarCover.url, href: poolBarPdf.url },
+  { title: "Décor Lookbook", eyebrow: "21-page collection", description: "Stages, entrances, mandaps, floral installations and atmospheric décor concepts.", cover: mediaAssetUrl(decorCover.url), href: mediaAssetUrl(decorPdf.url) },
+  { title: "Pool Events", eyebrow: "15-page experience guide", description: "Poolside styling, entertainment, lighting, personalised details and celebration ideas.", cover: mediaAssetUrl(poolEventsCover.url), href: mediaAssetUrl(poolEventsPdf.url) },
+  { title: "Pool Cocktails", eyebrow: "17-page inspiration book", description: "Colourful drinks, tropical presentation and poolside bar styling inspiration.", cover: mediaAssetUrl(cocktailsCover.url), href: mediaAssetUrl(cocktailsPdf.url) },
+  { title: "Pool Bar Menu", eyebrow: "5-page menu guide", description: "A curated pool-party beverage and cocktail menu presentation.", cover: mediaAssetUrl(poolBarCover.url), href: mediaAssetUrl(poolBarPdf.url) },
 ] as const;
