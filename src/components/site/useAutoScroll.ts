@@ -18,6 +18,8 @@ export function useAutoScroll(resetKey: string, enabled: boolean) {
     let hovering = false;
     let touching = false;
     let resumeAt = 0;
+    // Keep fractional movement between frames: browsers may round scrollLeft writes.
+    let position = el.scrollLeft;
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry?.isIntersecting ?? false;
     }, { threshold: 0.15 });
@@ -41,10 +43,13 @@ export function useAutoScroll(resetKey: string, enabled: boolean) {
         if (first && duplicate) {
           const loopWidth = duplicate.offsetLeft - first.offsetLeft;
           if (loopWidth > 0) {
-            el.scrollLeft += delta * 0.035;
-            if (el.scrollLeft >= loopWidth) el.scrollLeft -= loopWidth;
+            position += delta * 0.035;
+            if (position >= loopWidth) position %= loopWidth;
+            el.scrollLeft = position;
           }
         }
+      } else {
+        position = el.scrollLeft;
       }
       frame = requestAnimationFrame(tick);
     };

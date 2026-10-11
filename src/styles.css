@@ -239,7 +239,7 @@ html, body { overflow-x: clip; }
 @utility section-fade-light { background: linear-gradient(180deg, var(--midnight), var(--ivory)); }
 
 /* Motion stays inside sections; the page never scrolls itself. */
-.auto-scroll-row { scroll-snap-type: none; scroll-behavior: auto; }
+@utility auto-scroll-row { scroll-snap-type: none; scroll-behavior: auto; }
 @media (prefers-reduced-motion: reduce) {
   .section-reveal { opacity: 1 !important; transform: none !important; }
 }
