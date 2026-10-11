@@ -18,3 +18,7 @@
 - [x] Remove the Wedding, Corporate, Social and Birthday cards from the homepage entirely; centre the hero copy in a display serif
 - [x] Add the named PDF event guides to Events with polished animated previews
 - [x] Fix Vercel photo/video loading by resolving CDN media links to the canonical host and verify loading performance
+- [ ] Restore reliable continuous Showcase scrolling
+- [ ] Add real-event films and photos to the homepage
+- [ ] Remove the dummy photo collection and its filters from Gallery
+- [ ] Verify scrolling, real-media interactions and mobile layouts
