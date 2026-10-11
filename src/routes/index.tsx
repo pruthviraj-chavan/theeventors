@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Play, Pause, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
 import { EventVideo } from "@/components/site/EventVideo";
-import { FilmModal, FilmTile } from "@/components/site/FilmGallery";
+import { FilmGallery, FilmModal, FilmTile } from "@/components/site/FilmGallery";
+import { RealPhotoGallery } from "@/components/site/RealPhotoGallery";
+import { realFilms } from "@/lib/realMedia";
 import { heroFilm } from "@/lib/media";
 import { Counter, Particles, Reveal } from "@/components/site/Reveal";
 import { SectionHead } from "@/components/site/PageHero";
@@ -41,6 +43,8 @@ function Home() {
       <Process />
       <Showcase />
       <Films onOpen={setFilm} />
+      <RealPhotoGallery preview />
+      <FilmGallery variant="gallery" films={realFilms} eyebrow="Real Event Films" title="The celebrations, as they happened" />
       <Testimonials />
       <FinalCta />
       <FilmModal film={film} onClose={() => setFilm(null)} />
@@ -259,7 +263,7 @@ function Showcase() {
         </div>
         <div role="tablist" aria-label="Filter events" className="no-scrollbar -mx-5 mt-8 flex gap-2 overflow-x-auto px-5">
           {tabs.map((t) => (
-            <Button variant="outline" role="tab" aria-selected={tab === t} key={t} onClick={() => setTab(t)} className={`min-h-11 shrink-0 rounded-full px-5 text-sm transition-all hover:bg-pearl hover:text-foreground ${tab === t ? "bg-gold text-midnight shadow-gold" : "border border-border bg-pearl/60 hover:border-gold"}`}>{t}</Button>
+          <Button variant="outline" role="tab" aria-selected={tab === t} key={t} onClick={() => { setTab(t); setPaused(false); }} className={`min-h-11 shrink-0 rounded-full px-5 text-sm transition-all hover:bg-pearl hover:text-foreground ${tab === t ? "bg-gold text-midnight shadow-gold" : "border border-border bg-pearl/60 hover:border-gold"}`}>{t}</Button>
           ))}
         </div>
       </div>
