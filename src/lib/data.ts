@@ -6,6 +6,17 @@ import sangeet from "@/assets/sangeet.jpg";
 import lanterns from "@/assets/lanterns.jpg";
 import team from "@/assets/team.jpg";
 import hero from "@/assets/hero.jpg";
+import weddingPalace from "@/assets/events/grand-wedding.webp.asset.json";
+import corporateGala from "@/assets/events/corporate-gala.webp.asset.json";
+import engagementStage from "@/assets/events/engagement-stage.webp.asset.json";
+import familyCelebration from "@/assets/events/family-celebration.webp.asset.json";
+import birthdayCelebration from "@/assets/events/birthday-celebration.webp.asset.json";
+import haldiCelebration from "@/assets/events/haldi-celebration.webp.asset.json";
+import weddingReception from "@/assets/events/wedding-reception.webp.asset.json";
+import dandiyaNight from "@/assets/events/dandiya-night.webp.asset.json";
+import traditionalFestival from "@/assets/events/traditional-festival.webp.asset.json";
+import mehendiCelebration from "@/assets/events/mehendi-celebration.webp.asset.json";
+import { mediaAssetUrl } from "./assets";
 import { eventFilms, heroFilm } from "./media";
 
 export const images = { wedding, corporate, birthday, social, sangeet, lanterns, team, hero };
@@ -28,6 +39,21 @@ export const categories: { name: Category; desc: string; img: string; long: stri
   { name: "Social", desc: "Get-togethers, anniversaries & celebrations.", img: social, long: "Anniversaries, engagements, baby showers and soirées — intimate or grand, always deeply personal." },
   { name: "Birthday", desc: "Because every age deserves a party.", img: birthday, long: "From first birthdays to milestone sixtieths — themed, joyful and full of little surprises." },
 ];
+
+/** Client-supplied category photography and the full Indian event directory. */
+export const eventCatalog = [
+  { id: "weddings", title: "Wedding Events", image: mediaAssetUrl(weddingPalace.url), alt: "An illuminated palace wedding mandap at dusk", description: "From intimate vows to grand destination celebrations.", examples: ["Grand weddings", "Destination weddings", "Royal weddings", "Wedding receptions", "Intimate weddings", "Court-marriage celebrations"] },
+  { id: "traditional-cultural", title: "Traditional & Cultural Events", image: mediaAssetUrl(traditionalFestival.url), alt: "A traditional Indian courtyard decorated for a festival", description: "Celebrate India's colour, rituals and regional traditions.", examples: ["Dandiya nights", "Garba nights", "Navratri", "Ganesh Chaturthi", "Diwali parties", "Holi", "Makar Sankranti", "Onam", "Pongal", "Baisakhi"] },
+  { id: "pre-wedding", title: "Pre-Wedding Functions", image: mediaAssetUrl(mehendiCelebration.url), alt: "A colourful mehendi celebration with floral décor", description: "Every joyful gathering in the lead-up to the wedding.", examples: ["Haldi", "Mehendi", "Sangeet", "Roka", "Engagement", "Cocktail nights", "Bridal showers", "Bachelor parties", "Bachelorette parties"] },
+  { id: "birthdays", title: "Birthday Celebrations", image: mediaAssetUrl(birthdayCelebration.url), alt: "Guests celebrating around a decorated birthday cake", description: "Thoughtful themes and joyful details for every age.", examples: ["Kids' birthdays", "First birthdays", "Milestone birthdays", "18th and 21st birthdays", "50th birthdays", "Surprise parties", "Themed birthday parties"] },
+  { id: "family-celebrations", title: "Family & Personal Celebrations", image: mediaAssetUrl(familyCelebration.url), alt: "A family celebrating together beneath a festive balloon arch", description: "Meaningful milestones shared with the people closest to you.", examples: ["Baby showers", "Godh Bharai", "Naming ceremonies", "Annaprashan", "Housewarming (Griha Pravesh)", "Anniversaries", "Retirement parties", "Family reunions"] },
+  { id: "corporate-events", title: "Corporate Events", image: mediaAssetUrl(corporateGala.url), alt: "Guests at a large corporate gala with a blue-lit stage", description: "Polished experiences for teams, partners and brands.", examples: ["Annual functions", "Conferences", "Product launches", "Award ceremonies", "Team-building activities", "Dealer meets", "Business networking", "Company anniversaries"] },
+  { id: "education", title: "College & Educational Events", image: mediaAssetUrl(engagementStage.url), alt: "A grand stage setup ready for a formal celebration", description: "Memorable moments for schools, colleges and alumni.", examples: ["Freshers' parties", "Farewells", "Annual days", "College fests", "Cultural programs", "Alumni meets", "Graduations", "School functions", "Sports days", "Talent shows"] },
+  { id: "entertainment", title: "Entertainment & Live Shows", image: mediaAssetUrl(dandiyaNight.url), alt: "A lively evening dance celebration with a brightly lit stage", description: "Big-stage energy, live performance and nights to remember.", examples: ["Live concerts", "Celebrity appearances", "DJ nights", "Comedy shows", "Musical evenings", "Fashion shows", "Talent competitions", "Award nights", "Bollywood nights", "Dance competitions"] },
+  { id: "religious-spiritual", title: "Religious & Spiritual Events", image: mediaAssetUrl(traditionalFestival.url), alt: "A ceremonial courtyard arranged for a traditional gathering", description: "Warm, considered settings for devotional gatherings.", examples: ["Bhajan Sandhya", "Jagran", "Satyanarayan Puja", "Bhagwat Katha", "Ram Katha", "Temple inaugurations", "Satsang", "Spiritual gatherings"] },
+  { id: "exhibitions-brand", title: "Exhibitions & Brand Events", image: mediaAssetUrl(weddingReception.url), alt: "A large, illuminated ballroom set for a formal brand gathering", description: "Bring products, ideas and audiences together with impact.", examples: ["Trade fairs", "Business expos", "Product launches", "Promotional campaigns", "Roadshows", "Brand activations", "Store openings"] },
+  { id: "sports-community", title: "Sports & Community Events", image: mediaAssetUrl(haldiCelebration.url), alt: "An open-air community gathering decorated for a celebration", description: "Bring neighbours, teams and communities together.", examples: ["Cricket tournaments", "Kabaddi competitions", "Marathons", "Society gatherings", "Charity events", "Public awareness campaigns"] },
+] as const;
 
 export const showcase = [
   { title: "The Palace Pheras", cat: "Wedding", loc: "Udaipur", date: "Feb 2026", img: hero },
