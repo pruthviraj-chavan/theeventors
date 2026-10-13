@@ -22,3 +22,6 @@
 - [x] Add real-event films and photos to the homepage
 - [x] Remove the dummy photo collection and its filters from Gallery
 - [x] Verify scrolling, real-media interactions and mobile layouts
+- [ ] Replace Home and Gallery repository real-photo displays with client-supplied event-category imagery
+- [ ] Add the supplied Indian event category catalog to Home and Events, merging duplicate category lists without losing examples
+- [ ] Verify image loading, enquiry actions, accessibility and zero mobile overflow
