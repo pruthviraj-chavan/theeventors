@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { images } from "@/lib/data";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
+import { images, eventCatalog, whatsappLink } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { FinalCta } from "@/components/site/FinalCta";
 import { FilmGallery } from "@/components/site/FilmGallery";
-import { RealPhotoGallery } from "@/components/site/RealPhotoGallery";
-import { realFilms } from "@/lib/realMedia";
+import { Reveal } from "@/components/site/Reveal";
+import { motion } from "motion/react";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -24,8 +25,31 @@ function Gallery() {
   return <>
     <PageHero eyebrow="Our Gallery" title={<>Moments captured, <span className="text-gold-gradient italic">memories forever</span></>} sub="A glimpse into the celebrations we've been honoured to craft." img={images.social} />
     <FilmGallery variant="gallery" />
-    <RealPhotoGallery />
-    <FilmGallery variant="gallery" films={realFilms} eyebrow="Real Event Films" title="The celebrations, as they happened" />
+
+    {/* -------- EVENT CATEGORY GALLERY -------- */}
+    <section className="overflow-hidden bg-ivory py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6">
+        <div className="mb-10 grid items-end gap-5 md:grid-cols-[1fr_auto]">
+          <div><p className="eyebrow text-gold">Our celebrations</p><h2 className="mt-3 max-w-3xl text-4xl leading-tight sm:text-5xl md:text-6xl">Crafted in detail. <span className="italic text-gold">Lived in full.</span></h2></div>
+          <p className="max-w-sm text-sm text-muted-foreground">A look at the events, stages, celebrations and experiences created by The Eventors.</p>
+        </div>
+        <div className="columns-2 gap-3 md:columns-3 md:gap-5 lg:columns-4">
+          {eventCatalog.map((cat, index) => (
+            <motion.div key={cat.id} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.55, delay: (index % 3) * 0.06 }} className="mb-3 break-inside-avoid md:mb-5">
+              <a href={whatsappLink(`Hi The Eventors! I'm interested in ${cat.title}.`)} target="_blank" rel="noreferrer" className="group relative block overflow-hidden rounded-lg shadow-soft">
+                <img src={cat.image} alt={cat.alt} loading="lazy" decoding="async" className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${index % 5 === 0 ? "aspect-[4/5]" : index % 3 === 0 ? "aspect-square" : "aspect-[3/4]"}`} />
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-midnight/90 via-transparent to-transparent opacity-80 transition-opacity group-hover:opacity-100" />
+                <span className="absolute inset-x-0 bottom-0 whitespace-normal p-3 text-pearl sm:p-4">
+                  <span className="eyebrow text-champagne">{cat.examples.slice(0, 2).join(" · ")}</span>
+                  <span className="mt-1 block font-display text-lg leading-tight sm:text-xl">{cat.title}</span>
+                </span>
+              </a>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <FinalCta />
   </>;
 }

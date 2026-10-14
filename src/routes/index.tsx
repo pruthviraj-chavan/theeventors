@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Play, Pause, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { films, images, showcase, testimonials, whatsappLink } from "@/lib/data";
+import { ArrowRight, Play, Pause, Sparkles, ClipboardCheck, Users, Gem, Star, X, MapPin, Quote, ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { films, images, showcase, testimonials, whatsappLink, eventCatalog } from "@/lib/data";
 import { EventVideo } from "@/components/site/EventVideo";
 import { FilmGallery, FilmModal, FilmTile } from "@/components/site/FilmGallery";
-import { RealPhotoGallery } from "@/components/site/RealPhotoGallery";
-import { realFilms } from "@/lib/realMedia";
 import { heroFilm } from "@/lib/media";
 import { Counter, Particles, Reveal } from "@/components/site/Reveal";
 import { SectionHead } from "@/components/site/PageHero";
@@ -43,8 +41,7 @@ function Home() {
       <Process />
       <Showcase />
       <Films onOpen={setFilm} />
-      <RealPhotoGallery preview />
-      <FilmGallery variant="gallery" films={realFilms} eyebrow="Real Event Films" title="The celebrations, as they happened" />
+      <EventCategories />
       <Testimonials />
       <FinalCta />
       <FilmModal film={film} onClose={() => setFilm(null)} />
@@ -358,6 +355,38 @@ function Testimonials() {
             </Reveal>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- EVENT CATEGORIES (bright, 13 Indian categories) ---------------- */
+function EventCategories() {
+  return (
+    <section className="overflow-hidden bg-[linear-gradient(180deg,var(--ivory),var(--ivory)_90%,var(--midnight)_100%)] py-20 md:py-28">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6">
+        <Reveal>
+          <SectionHead eyebrow="What We Do" title={<>Every occasion, one <span className="text-accent-gradient italic">team</span></>} />
+          <p className="mt-5 max-w-xl text-muted-foreground">From intimate pujas to stadium concerts — we craft every kind of Indian celebration with equal love and precision.</p>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {eventCatalog.map((cat, i) => (
+            <Reveal key={cat.id} delay={i * 0.04}>
+              <Link to="/events" className="group relative block h-full overflow-hidden rounded-2xl shadow-soft">
+                <img src={cat.image} alt={cat.alt} loading="lazy" className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/40 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-4 text-pearl md:p-5">
+                  <p className="eyebrow text-champagne text-[0.55rem]">{cat.examples.slice(0, 2).join(" · ")}</p>
+                  <h3 className="mt-1.5 text-lg leading-tight md:text-xl">{cat.title}</h3>
+                  <p className="mt-1 text-[0.7rem] leading-relaxed text-pearl/65 line-clamp-2">{cat.description}</p>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal className="mt-10 text-center">
+          <Link to="/events" className="btn-ghost-dark">Explore All Event Types <ArrowRight size={16} /></Link>
+        </Reveal>
       </div>
     </section>
   );

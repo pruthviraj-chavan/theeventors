@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Check, Download } from "lucide-react";
-import { categories, images, whatsappLink } from "@/lib/data";
+import { categories, eventCatalog, images, whatsappLink } from "@/lib/data";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { FinalCta } from "@/components/site/FinalCta";
@@ -33,6 +33,8 @@ function Events() {
   return (
     <>
       <PageHero eyebrow="Event Listing" title={<>Our <span className="text-gold-gradient italic">Events</span></>} sub="Different occasions. Same emotion — The Eventors." img={images.sangeet} />
+
+      {/* -------- TOP 4 FEATURED CATEGORIES -------- */}
       <section className="bg-ivory py-16 md:py-24">
         <div className="mx-auto max-w-7xl space-y-20 px-5 sm:px-6 md:space-y-28">
           {categories.map((c, i) => (
@@ -56,6 +58,40 @@ function Events() {
           ))}
         </div>
       </section>
+
+      {/* -------- FULL 13-CATEGORY DIRECTORY -------- */}
+      <section className="bg-[linear-gradient(180deg,var(--ivory),var(--ivory)_92%,var(--midnight)_100%)] py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+          <Reveal className="mb-12 max-w-3xl">
+            <p className="eyebrow text-gold">Full Event Directory</p>
+            <h2 className="mt-3 text-4xl leading-tight sm:text-5xl md:text-6xl">Every Indian <span className="text-accent-gradient italic">celebration</span></h2>
+            <p className="mt-5 max-w-2xl text-muted-foreground">From traditional pujas to Bollywood nights — explore every event category we manage, all under one roof.</p>
+          </Reveal>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {eventCatalog.map((cat, i) => (
+              <Reveal key={cat.id} delay={i * 0.04}>
+                <article id={cat.id} className="group relative h-full overflow-hidden rounded-2xl shadow-soft scroll-mt-28">
+                  <img src={cat.image} alt={cat.alt} loading="lazy" className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-midnight/95 via-midnight/30 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-pearl md:p-5">
+                    <h3 className="text-lg leading-tight md:text-xl">{cat.title}</h3>
+                    <p className="mt-1.5 text-[0.7rem] leading-relaxed text-pearl/65 line-clamp-2">{cat.description}</p>
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {cat.examples.slice(0, 3).map((ex) => (
+                        <span key={ex} className="rounded-full border border-pearl/20 bg-pearl/10 px-2 py-0.5 text-[0.6rem] text-champagne">{ex}</span>
+                      ))}
+                      {cat.examples.length > 3 && <span className="rounded-full border border-gold/30 bg-gold/15 px-2 py-0.5 text-[0.6rem] text-champagne">+{cat.examples.length - 3} more</span>}
+                    </div>
+                    <a href={whatsappLink(`Hi The Eventors! I'm interested in ${cat.title}.`)} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-champagne transition-colors hover:text-gold">Enquire <ArrowRight size={12} /></a>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* -------- PDF GUIDES -------- */}
       <section className="overflow-hidden bg-midnight py-16 text-pearl md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
           <Reveal className="mb-10 max-w-3xl"><p className="eyebrow text-gold">Event inspiration library</p><h2 className="mt-3 text-4xl leading-tight sm:text-5xl md:text-6xl">Explore our <span className="italic text-gold">experience guides</span></h2><p className="mt-5 max-w-2xl text-sm leading-relaxed text-pearl/65 sm:text-base">Open the original The Eventors lookbooks for décor, pool events, cocktails and menu inspiration.</p></Reveal>
@@ -75,6 +111,7 @@ function Events() {
           </div>
         </div>
       </section>
+
       <FilmGallery variant="events" films={[videoLibrary.entrance, videoLibrary.courtyard, videoLibrary.dandiya, videoLibrary.estate]} />
       <FinalCta />
     </>
